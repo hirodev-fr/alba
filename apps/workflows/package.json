@@ -4,11 +4,19 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "bun build src/index.ts --target browser --outdir dist --external cloudflare:workers",
-    "typecheck": "tsc --noEmit"
+    "build": "bun build src/index.ts --target browser --outdir dist --external cloudflare:workers --external cloudflare:workflows",
+    "typecheck": "tsc --noEmit",
+    "test": "bun test tests"
+  },
+  "dependencies": {
+    "@alba/contracts": "workspace:*",
+    "@alba/db": "workspace:*",
+    "@alba/extraction": "workspace:*",
+    "@alba/tracking": "workspace:*"
   },
   "devDependencies": {
     "@alba/config": "workspace:*",
-    "@cloudflare/workers-types": "5.20261121.1"
+    "@cloudflare/workers-types": "5.20261121.1",
+    "@types/bun": "1.4.4"
   }
 }
