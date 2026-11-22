@@ -389,7 +389,7 @@ Les identifiants **Bxx** remplacent le plan Axx de l’ancienne architecture Pyt
 | B03 | Contrats Zod | Contrats API et extraction, fixtures valides/invalides | Réalisé localement : schémas stricts versionnés, types inférés, fixtures et tests Bun ; intégrations runtime prévues en B05–B10 |
 | B04 | Neon + Drizzle | Schéma, migrations et transactions atomiques validés ; contraintes d’unicité permettant une finalisation idempotente | Réalisé : projet personnel provisionné/migré avec alchemy dev ; 8 tests Neon HTTP passants, finalisation concurrente et rollback SQL vérifiés ; aucun déploiement Worker B04 |
 | B05 | Adaptateur Zyte | Extraction HTTP réelle normalisée ; erreurs classées | Réalisé : client HTTP, mapping et erreurs classées ; 24 tests simulés et extraction Zyte réelle à 51.77 GBP vérifiés (voir docs/extraction.md) |
-| B06 | Benchmark extraction | Échantillon représentatif, exactitude et coût mesurés | Non commencé |
+| B06 | Benchmark extraction | Échantillon représentatif, exactitude et coût mesurés | Réalisé : 12 cas réels/contrôle, 8/11 réponses conformes aux références, 6 observations ; coût Stats mesuré 0,006733 USD ; limites documentées dans docs/extraction-benchmark.md |
 | B07 | Première vérification durable | Extraction réelle persistée ; finalisation répétée sans doublon ; erreurs temporaires, définitives et métier distinguées ; reprise après panne SQL sans rejouer une extraction déjà durablement enregistrée | Non commencé |
 | B08 | Dispatcher | Échéances réservées et workflows démarrés sans perte de tâche | Non commencé |
 | B09 | Réconciliation | Échecs et démarrages incertains récupérables | Non commencé |

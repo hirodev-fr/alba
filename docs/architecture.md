@@ -36,6 +36,8 @@ Les trois applications correspondent aux Workers déclarés par Alchemy. Le cron
 
 Les workspaces consomment les points d’entrée TypeScript de leurs dépendances internes. Les applications assemblent les packages ; les secrets, accès SQL et implémentations serveur ne doivent pas être importés dans le code navigateur.
 
+Le [benchmark B06](extraction-benchmark.md) est un outil Bun explicite, hors Workers et hors CI réseau. Il utilise l’adaptateur HTTP, des références indépendantes et l’API Stats Zyte pour mesurer qualité et coût ; les preuves synthétiques et marchandes sont séparées. Il ne modifie pas les contrats B03 ni le flux Workflow.
+
 Les [contrats B03](contracts.md) définissent les entrées et réponses métier, le contexte d’offre, les montants décimaux, les observations et les erreurs classées. Leur validation est testée localement. L’adaptateur Zyte consomme ces contrats ; les routes métier et le Workflow restent à intégrer ; le squelette B02 conserve son ancien payload jusqu’à B07.
 
 ## Flux cible

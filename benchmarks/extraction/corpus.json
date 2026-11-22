@@ -1,0 +1,349 @@
+{
+  "version": 1,
+  "description": "B06 exploratoire : 7 enseignes/fabricants réels, 3 marchés, contrôle synthétique séparé. Cas figés avant extraction, sans sélection selon les résultats. Prix public unitaire hors livraison, sans abonnement ni avantage membre.",
+  "cases": [
+    {
+      "id": "books-control",
+      "segment": "control",
+      "tags": ["simple", "stock"],
+      "request": {
+        "version": 1,
+        "mode": "http",
+        "offer": {
+          "url": "https://books.toscrape.com/catalogue/a-light-in-the-attic_1000/index.html",
+          "context": {
+            "variant": {},
+            "country": null,
+            "expectedCurrency": "GBP",
+            "seller": null
+          }
+        }
+      },
+      "reference": {
+        "checkedAt": "2026-11-22T17:28:41.346Z",
+        "sourceUrl": "https://books.toscrape.com/catalogue/a-light-in-the-attic_1000/index.html",
+        "evidence": "Page publique inspectée indépendamment via web : livre A Light in the Attic, prix TTC 51.77 GBP, 22 exemplaires. Site de démonstration.",
+        "expected": {
+          "status": "price",
+          "amount": "51.77",
+          "currency": "GBP",
+          "availability": "in_stock"
+        }
+      }
+    },
+    {
+      "id": "ikea-fr",
+      "segment": "retail",
+      "tags": ["furniture", "tax", "localized"],
+      "request": {
+        "version": 1,
+        "mode": "http",
+        "offer": {
+          "url": "https://www.ikea.com/fr/fr/p/lack-table-dappoint-blanc-30449908/",
+          "context": {
+            "variant": {},
+            "country": "FR",
+            "expectedCurrency": "EUR",
+            "seller": null
+          }
+        }
+      },
+      "reference": {
+        "checkedAt": "2026-11-22T17:28:41.346Z",
+        "sourceUrl": "https://www.ikea.com/fr/fr/p/lack-table-dappoint-blanc-30449908/",
+        "evidence": "Page publique française inspectée via web : LACK blanc 55x55, référence 30449908, prix 9.99 EUR incluant éco-participation. Disponibilité dépendant du lieu non vérifiable.",
+        "expected": {
+          "status": "price",
+          "amount": "9.99",
+          "currency": "EUR",
+          "availability": null
+        }
+      }
+    },
+    {
+      "id": "ikea-fr-variant",
+      "segment": "context",
+      "tags": ["variant"],
+      "request": {
+        "version": 1,
+        "mode": "http",
+        "offer": {
+          "url": "https://www.ikea.com/fr/fr/p/lack-table-dappoint-blanc-30449908/",
+          "context": {
+            "variant": {
+              "color": "blanc"
+            },
+            "country": "FR",
+            "expectedCurrency": "EUR",
+            "seller": null
+          }
+        }
+      },
+      "reference": {
+        "checkedAt": "2026-11-22T17:28:41.346Z",
+        "sourceUrl": "https://www.ikea.com/fr/fr/p/lack-table-dappoint-blanc-30449908/",
+        "evidence": "Même référence publique LACK : blanc, 55x55 cm. Le contexte demandé doit être confirmé par les attributs, pas seulement le montant.",
+        "expected": {
+          "status": "price",
+          "amount": "9.99",
+          "currency": "EUR",
+          "availability": null
+        }
+      }
+    },
+    {
+      "id": "ikea-fr-seller",
+      "segment": "context",
+      "tags": ["seller"],
+      "request": {
+        "version": 1,
+        "mode": "http",
+        "offer": {
+          "url": "https://www.ikea.com/fr/fr/p/lack-table-dappoint-blanc-30449908/",
+          "context": {
+            "variant": {},
+            "country": "FR",
+            "expectedCurrency": "EUR",
+            "seller": "IKEA"
+          }
+        }
+      },
+      "reference": {
+        "checkedAt": "2026-11-22T17:28:41.346Z",
+        "sourceUrl": "https://www.ikea.com/fr/fr/p/lack-table-dappoint-blanc-30449908/",
+        "evidence": "Offre directe IKEA sur sa page officielle. Le vendeur demandé est IKEA ; un refus mesure une limitation de couverture et non un succès.",
+        "expected": {
+          "status": "price",
+          "amount": "9.99",
+          "currency": "EUR",
+          "availability": null
+        }
+      }
+    },
+    {
+      "id": "ikea-gb",
+      "segment": "retail",
+      "tags": ["member-price", "localized"],
+      "request": {
+        "version": 1,
+        "mode": "http",
+        "offer": {
+          "url": "https://www.ikea.com/gb/en/p/lack-side-table-white-30449908/",
+          "context": {
+            "variant": {},
+            "country": "GB",
+            "expectedCurrency": "GBP",
+            "seller": null
+          }
+        }
+      },
+      "reference": {
+        "checkedAt": "2026-11-22T17:28:41.346Z",
+        "sourceUrl": "https://www.ikea.com/gb/en/p/lack-side-table-white-30449908/",
+        "evidence": "Page britannique inspectée via web : prix public en ligne 10 GBP ; offre membre 8 GBP réservée au magasin, exclue de la référence. Stock local inconnu.",
+        "expected": {
+          "status": "price",
+          "amount": "10",
+          "currency": "GBP",
+          "availability": null
+        }
+      }
+    },
+    {
+      "id": "ikea-removed",
+      "segment": "negative",
+      "tags": ["removed", "redirect"],
+      "request": {
+        "version": 1,
+        "mode": "http",
+        "offer": {
+          "url": "https://www.ikea.com/fr/fr/p/billy-bibliotheque-blanc-00263850/",
+          "context": {
+            "variant": {},
+            "country": "FR",
+            "expectedCurrency": "EUR",
+            "seller": null
+          }
+        }
+      },
+      "reference": {
+        "checkedAt": "2026-11-22T17:28:41.346Z",
+        "sourceUrl": "https://www.ikea.com/fr/fr/p/billy-bibliotheque-blanc-00263850/",
+        "evidence": "Inspection indépendante : redirection vers le catalogue général /fr/fr/cat/produits-products/, aucune offre correspondant à la référence demandée.",
+        "expected": {
+          "status": "no_observation"
+        }
+      }
+    },
+    {
+      "id": "lego-roses",
+      "segment": "retail",
+      "tags": ["toys", "loyalty"],
+      "request": {
+        "version": 1,
+        "mode": "http",
+        "offer": {
+          "url": "https://www.lego.com/fr-fr/product/roses-40460",
+          "context": {
+            "variant": {},
+            "country": "FR",
+            "expectedCurrency": "EUR",
+            "seller": null
+          }
+        }
+      },
+      "reference": {
+        "checkedAt": "2026-11-22T17:28:41.346Z",
+        "sourceUrl": "https://www.lego.com/fr-fr/product/roses-40460",
+        "evidence": "Page officielle inspectée via web : Les roses 40460, 14.99 EUR, disponible ; points fidélité exclus du prix.",
+        "expected": {
+          "status": "price",
+          "amount": "14.99",
+          "currency": "EUR",
+          "availability": "in_stock"
+        }
+      }
+    },
+    {
+      "id": "lush-intergalactic",
+      "segment": "retail",
+      "tags": ["beauty", "unit-price"],
+      "request": {
+        "version": 1,
+        "mode": "http",
+        "offer": {
+          "url": "https://www.lush.com/fr/fr/p/intergalactic-bath-bomb",
+          "context": {
+            "variant": {},
+            "country": "FR",
+            "expectedCurrency": "EUR",
+            "seller": null
+          }
+        }
+      },
+      "reference": {
+        "checkedAt": "2026-11-22T17:28:41.346Z",
+        "sourceUrl": "https://www.lush.com/fr/fr/p/intergalactic-bath-bomb",
+        "evidence": "Page officielle inspectée via web : bombe 190g, prix unitaire 8 EUR, livraison disponible. Le prix au kg 42.11 EUR est exclu.",
+        "expected": {
+          "status": "price",
+          "amount": "8.00",
+          "currency": "EUR",
+          "availability": "in_stock"
+        }
+      }
+    },
+    {
+      "id": "apple-airtag-one",
+      "segment": "retail",
+      "tags": ["electronics", "pack"],
+      "request": {
+        "version": 1,
+        "mode": "http",
+        "offer": {
+          "url": "https://www.apple.com/fr/shop/buy-airtag/airtag/pack-de-1",
+          "context": {
+            "variant": {},
+            "country": "FR",
+            "expectedCurrency": "EUR",
+            "seller": null
+          }
+        }
+      },
+      "reference": {
+        "checkedAt": "2026-11-22T17:28:41.346Z",
+        "sourceUrl": "https://www.apple.com/fr/shop/buy-airtag/airtag/pack-de-1",
+        "evidence": "Page officielle inspectée via web : pack de 1 à 35 EUR ; pack de 4 à 119 EUR exclu. Disponibilité non vérifiée.",
+        "expected": {
+          "status": "price",
+          "amount": "35.00",
+          "currency": "EUR",
+          "availability": null
+        }
+      }
+    },
+    {
+      "id": "patagonia-jacket",
+      "segment": "context",
+      "tags": ["apparel", "variant"],
+      "request": {
+        "version": 1,
+        "mode": "http",
+        "offer": {
+          "url": "https://www.patagonia.com/product/mens-better-sweater-fleece-jacket/25528.html",
+          "context": {
+            "variant": {
+              "size": "M"
+            },
+            "country": "US",
+            "expectedCurrency": "USD",
+            "seller": null
+          }
+        }
+      },
+      "reference": {
+        "checkedAt": "2026-11-22T17:28:41.346Z",
+        "sourceUrl": "https://www.patagonia.com/product/mens-better-sweater-fleece-jacket/25528.html",
+        "evidence": "Page officielle inspectée via web : Better Sweater homme, prix affiché 169 USD. Taille M demandée ; disponibilité de cette taille non vérifiable.",
+        "expected": {
+          "status": "price",
+          "amount": "169",
+          "currency": "USD",
+          "availability": null
+        }
+      }
+    },
+    {
+      "id": "raspberry-multiple",
+      "segment": "negative",
+      "tags": ["electronics", "ambiguous", "multiple-offers"],
+      "request": {
+        "version": 1,
+        "mode": "http",
+        "offer": {
+          "url": "https://www.raspberrypi.com/products/raspberry-pi-5/",
+          "context": {
+            "variant": {},
+            "country": "US",
+            "expectedCurrency": "USD",
+            "seller": null
+          }
+        }
+      },
+      "reference": {
+        "checkedAt": "2026-11-22T17:28:41.346Z",
+        "sourceUrl": "https://www.raspberrypi.com/products/raspberry-pi-5/",
+        "evidence": "Page fabricant inspectée via web : plusieurs capacités mémoire et revendeurs, sans offre marchande sélectionnée. Aucun prix unique de suivi ne doit être retenu.",
+        "expected": {
+          "status": "no_observation"
+        }
+      }
+    },
+    {
+      "id": "decathlon-football",
+      "segment": "retail",
+      "tags": ["sport", "unverified"],
+      "request": {
+        "version": 1,
+        "mode": "http",
+        "offer": {
+          "url": "https://www.decathlon.fr/p/ballon-de-football-taille-5-f100/_/R-p-303232",
+          "context": {
+            "variant": {},
+            "country": "FR",
+            "expectedCurrency": "EUR",
+            "seller": null
+          }
+        }
+      },
+      "reference": {
+        "checkedAt": "2026-11-22T17:28:41.346Z",
+        "sourceUrl": "https://www.decathlon.fr/p/ballon-de-football-taille-5-f100/_/R-p-303232",
+        "evidence": "Page inaccessible avec l’outil indépendant de lecture web. Aucun prix de référence inventé ; cas conservé dans le dénominateur de couverture.",
+        "expected": {
+          "status": "unverified"
+        }
+      }
+    }
+  ]
+}
