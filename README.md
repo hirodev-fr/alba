@@ -4,7 +4,7 @@ Alba est un projet de suivi de prix : l’objectif est de surveiller des fiches 
 
 ## Démarrage rapide
 
-Prérequis : Bun **1.4.4** et Node.js **22** (environnement utilisé pour les vérifications du projet).
+Prérequis : Bun **1.4.4** et Node.js **24.22.3** (indiqué dans `.node-version`).
 
 ```sh
 bun install --frozen-lockfile

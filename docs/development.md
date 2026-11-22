@@ -2,7 +2,7 @@
 
 ## Prérequis et installation
 
-Le projet utilise les workspaces Bun et Turborepo. Bun **1.4.4** est déclaré dans `package.json` ; les vérifications locales ont été exécutées avec Node.js **22**.
+Le projet utilise les workspaces Bun et Turborepo. Bun **1.4.4** est déclaré dans `package.json` ; Node.js **24.22.3** est indiqué dans `.node-version` et utilisé par la CI. Avec `fnm`, utiliser `fnm use` à la racine pour sélectionner cette version.
 
 Depuis la racine :
 

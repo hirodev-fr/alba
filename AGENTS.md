@@ -9,7 +9,7 @@
 
 ## Commandes
 
-Exécuter depuis la racine avec Bun 1.4.4 :
+Exécuter depuis la racine avec Bun 1.4.4 et Node.js 24.22.3 (version indiquée dans `.node-version` et utilisée par la CI) :
 
 | Commande | Usage |
 | --- | --- |
