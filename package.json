@@ -22,6 +22,7 @@
     "extraction:verify": "bun --env-file=.env scripts/verify-extraction.ts",
     "extraction:benchmark": "bun --env-file=.env scripts/benchmark-extraction.ts",
     "extraction:cost": "bun --env-file=.env scripts/benchmark-cost.ts",
+    "dispatcher:verify": "bun --env-file=.env scripts/verify-dispatcher.ts",
     "workflow:verify": "bun --env-file=.env scripts/verify-workflow.ts"
   },
   "devDependencies": {
