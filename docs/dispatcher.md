@@ -20,7 +20,7 @@ Après acquittement, la fréquence effective est le minimum des fréquences des 
 
 Les appels de démarrage du lot sont parallèles et leurs échecs isolés. Les obligations non confirmées gardent leur bail ; le handler signale un échec du passage, sans exposer les exceptions fournisseur ou SQL. Un prochain cron reprend après expiration. Ce lot borné ne constitue ni un quota global d’instances ni un plafond monétaire : ces contrôles restent en B13.
 
-B09 doit réconcilier les instances `errored`/`terminated` et les contrôles bloqués après démarrage. B08 confirme leur existence sans les redémarrer ; tant que leur état SQL reste non terminal, le produit ne reçoit pas de nouvelle vérification. Le parcours utilisateur est en B10–B12 et la validation cloud complète en B16.
+[B09](reconciliation.md) réconcilie les instances terminales et les contrôles bloqués après démarrage avant chaque passage du dispatcher. B08 confirme leur existence sans les redémarrer ; tant que leur état SQL reste non terminal, le produit ne reçoit pas de nouvelle vérification. Le parcours utilisateur est en B10–B12 et la validation cloud complète en B16.
 
 ## Vérifier
 

@@ -10,7 +10,7 @@ API (déclencheur opérateur protégé) → binding PRICE_CHECK → Workflow dur
 Workflow → Zyte HTTP → résultat durable → Neon (tentatives et finalisation atomique)
 ```
 
-Ce parcours B07 est vérifié avec les Workers locaux d’Alchemy et Zyte/Neon réels, y compris une panne SQL injectée. Le déploiement cloud `dev` reste celui du squelette B02 ; aucun déploiement distant B07 n’a été effectué. Les routes de suivi et l’authentification restent à implémenter. Le cron et le dispatcher B08 sont présents, avec activation explicite ; voir [B08](dispatcher.md). Voir les [preuves B07](workflows.md) et [l’infrastructure](infrastructure.md).
+Ce parcours B07 est vérifié avec les Workers locaux d’Alchemy et Zyte/Neon réels, y compris une panne SQL injectée. Le déploiement cloud `dev` reste celui du squelette B02 ; aucun déploiement distant B07 n’a été effectué. Les routes de suivi et l’authentification restent à implémenter. Le cron et le dispatcher B08 sont présents, avec activation explicite ; B09 ajoute la [réconciliation](reconciliation.md) avant la distribution ; voir [B08](dispatcher.md). Voir les [preuves B07](workflows.md) et [l’infrastructure](infrastructure.md).
 
 ## Applications
 
@@ -30,7 +30,7 @@ Les trois applications correspondent aux Workers déclarés par Alchemy. Le cron
 | `packages/db` | Client Neon HTTP, schéma Drizzle B04 et migrations versionnées appliquées par Alchemy. | Schémas, accès aux données et migrations. |
 | `packages/contracts` | Contrats Zod B03, types inférés et fixtures API/extraction/Workflow. | Schémas et types partagés sans code serveur. |
 | `packages/auth` | Point d’entrée réservé. | Authentification. |
-| `packages/tracking` | Réservation atomique des échéances, acquittement protégé par bail, préparation, tentatives, finalisation et prix courant. | Logique métier commune aux applications serveur. |
+| `packages/tracking` | Réservation atomique des échéances et réconciliations, acquittement protégé par bail, préparation, tentatives, finalisation et prix courant. | Logique métier commune aux applications serveur. |
 | `packages/extraction` | Client HTTP Zyte et mapping B03, tests simulés. | Adaptateur d’extraction et normalisation des résultats. |
 | `packages/config` | Configuration TypeScript stricte partagée. | Conventions techniques communes. |
 

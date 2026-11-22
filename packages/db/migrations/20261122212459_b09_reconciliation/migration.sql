@@ -1,0 +1,2 @@
+ALTER TABLE "price_checks" ADD COLUMN "next_reconcile_at" timestamp(3) with time zone DEFAULT now() + interval '2 minutes' NOT NULL;--> statement-breakpoint
+CREATE INDEX "price_checks_reconcile_idx" ON "price_checks" ("next_reconcile_at","id") WHERE "status" in ('pending', 'running');

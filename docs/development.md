@@ -120,3 +120,7 @@ Dependabot ouvre par défaut ses pull requests vers la branche par défaut, actu
 ## Dispatcher B08
 
 `DISPATCH_ENABLED=true` active le cron Alchemy chaque minute. Pour le contrôle local sans dépense, lancer `DISPATCH_ENABLED=true EXTRACTION_ENABLED=false bun run infra:dev`, puis `bun run dispatcher:verify <url-api-locale>`. La connexion `DATABASE_URL` doit désigner la même base que le stage actif. Les tests SQL B08 sont inclus dans `db:test` ; les tests de démarrage et de reprise sans réseau sont inclus dans `test`. Voir [garanties, fréquence et limites](dispatcher.md).
+
+## Réconciliation B09
+
+Le cron activé par `DISPATCH_ENABLED=true` réconcilie les contrôles ouverts avant de distribuer les échéances. Alchemy applique la nouvelle migration `next_reconcile_at` ; `db:test` inclut les tests SQL B09. `bun run reconciliation:verify <url-api-locale>` vérifie un véritable échec Workflow puis deux passages cron, sans appel fournisseur, avec la même configuration que `dispatcher:verify`. Voir [politique de reprise et limites](reconciliation.md).

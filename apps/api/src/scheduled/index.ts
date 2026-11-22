@@ -1,8 +1,14 @@
 import { createDb } from "@alba/db";
-import { acknowledgeDispatch, reserveDueChecks } from "@alba/tracking";
+import {
+  acknowledgeDispatch,
+  reserveDueChecks,
+  reserveReconciliation,
+  reconcileTerminalCheck,
+} from "@alba/tracking";
 
 import { dispatchDueChecks } from "./dispatch";
 import type { WorkflowBinding } from "./dispatch";
+import { reconcileChecks } from "./reconcile";
 
 export interface SchedulerEnv {
   DATABASE_URL?: string;
@@ -18,6 +24,14 @@ export const scheduled = async (_controller: unknown, env: SchedulerEnv) => {
     throw new Error("Dispatcher bindings unavailable");
   }
   const db = createDb(env.DATABASE_URL);
+  const reconciliation = await reconcileChecks(
+    {
+      reserve: () => reserveReconciliation(db),
+      finalize: (checkId, status) =>
+        reconcileTerminalCheck(db, checkId, status),
+    },
+    env.PRICE_CHECK
+  ).catch(() => null);
   const result = await dispatchDueChecks(
     {
       reserve: () => reserveDueChecks(db),
@@ -25,9 +39,9 @@ export const scheduled = async (_controller: unknown, env: SchedulerEnv) => {
     },
     env.PRICE_CHECK
   );
-  if (result.deferred > 0) {
+  if (result.deferred > 0 || !reconciliation || reconciliation.deferred > 0) {
     throw new Error(
-      `Dispatcher deferred ${result.deferred} of ${result.reserved} reservations`
+      `Scheduler deferred dispatch=${result.deferred}; reconciliation=${reconciliation?.deferred ?? "unavailable"}`
     );
   }
 };
