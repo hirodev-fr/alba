@@ -16,6 +16,6 @@
   },
   "devDependencies": {
     "@alba/config": "workspace:*",
-    "@types/bun": "1.3.14"
+    "@types/bun": "1.4.4"
   }
 }
