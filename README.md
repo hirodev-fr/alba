@@ -2,7 +2,7 @@
 
 Alba est un projet de suivi de prix : l’objectif est de surveiller des fiches produit et de consulter l’historique de leurs prix. Le dépôt contient actuellement les **fondations, l’infrastructure dev, les contrats Zod B03 et la persistance Neon B04** du monorepo ; les routes de gestion des suivis, l’authentification restent à implémenter ; l’adaptateur HTTP Zyte et le Workflow durable B07 sont assemblés et vérifiés en runtime local avec Zyte/Neon réels.
 
-Le [dispatcher B08](docs/dispatcher.md) réserve les échéances et démarre les Workflows avec reprise des baux expirés ; son activation est explicite.
+Le [dispatcher B08](docs/dispatcher.md) réserve les échéances et démarre les Workflows avec reprise des baux expirés ; son activation est explicite. La [réconciliation B09](docs/reconciliation.md) récupère les états terminaux et les démarrages incertains au même passage cron.
 
 ## Démarrage rapide
 

@@ -1,6 +1,6 @@
 # Première vérification durable — B07
 
-Le Workflow consomme `{ version: 1, checkId }`, avec un identifiant d’instance **égal au `checkId`**. La vérification doit déjà exister dans Neon. B07 fournit un déclencheur opérateur protégé ; le dispatcher est implémenté en [B08](dispatcher.md), la création des suivis et la réconciliation restent en B09–B11.
+Le Workflow consomme `{ version: 1, checkId }`, avec un identifiant d’instance **égal au `checkId`**. La vérification doit déjà exister dans Neon. B07 fournit un déclencheur opérateur protégé ; le dispatcher est implémenté en [B08](dispatcher.md), la réconciliation est implémentée en [B09](reconciliation.md) ; la création des suivis reste en B10.
 
 ## Étapes et garanties
 
@@ -10,7 +10,7 @@ Le Workflow consomme `{ version: 1, checkId }`, avec un identifiant d’instance
 4. Si l’erreur est temporaire, `retry-http-1` attend 10 secondes avant la deuxième tentative ; la troisième attend 20 secondes. Maximum : trois appels logiques. Une erreur permanente (dont authentification/budget) ou métier (prix absent/ambigu) arrête immédiatement les reprises et est finalisée sans observation.
 5. `finalize` utilise la transaction B04 : une observation au maximum par vérification, état terminal cohérent et première finalisation conservée. Une panne SQL reprend cette étape sans rejouer l’extraction enregistrée.
 
-Les étapes SQL ont **5 retries**, délai initial **2 secondes**, backoff exponentiel, timeout **30 secondes par essai**. Chaque étape d’extraction a **0 retry implicite**, timeout **90 secondes**, et le client `fetch` s’annule après **60 secondes**. Les reprises métier temporaires sont les étapes explicites ci-dessus ; les exceptions inattendues ne créent pas de boucle de dépense. Après épuisement des retries SQL, l’instance peut être en erreur et la vérification rester `running` : la réconciliation automatique appartient à B09.
+Les étapes SQL ont **5 retries**, délai initial **2 secondes**, backoff exponentiel, timeout **30 secondes par essai**. Chaque étape d’extraction a **0 retry implicite**, timeout **90 secondes**, et le client `fetch` s’annule après **60 secondes**. Les reprises métier temporaires sont les étapes explicites ci-dessus ; les exceptions inattendues ne créent pas de boucle de dépense. Après épuisement des retries SQL, l’instance peut être en erreur et la vérification rester `running` : la [réconciliation B09](reconciliation.md) récupère le résultat SQL final disponible ou enregistre un échec technique.
 
 L’appel externe n’est pas exactement une fois : une panne entre succès Zyte et enregistrement durable peut produire une dépense supplémentaire. Ne pas redémarrer une instance terminée avec son état effacé pour reprendre une finalisation ; préserver son journal durable. L’unicité SQL protège les observations, pas la facturation externe.
 
@@ -23,7 +23,7 @@ Alchemy beta.87 injecte `DATABASE_URL` et `ZYTE_API_KEY` uniquement côté serve
 - `POST /internal/checks/start`, corps `{ "version": 1, "checkId": "..." }`, appelle le binding `PRICE_CHECK.create` avec l’ID déterministe ;
 - `GET /internal/checks/:id` appelle `PRICE_CHECK.get().status()`.
 
-Via Nuxt, préfixer `/api`. Ce déclencheur sert à la validation explicite, pas à des utilisateurs finaux. Ne jamais intégrer le secret dans l’interface. Il ne crée ni produit ni vérification ; le script opérateur les crée en base. Un démarrage incertain doit être inspecté avec le même identifiant ; B08 récupère automatiquement les démarrages non acquittés du dispatcher ; B09 traitera les instances échouées.
+Via Nuxt, préfixer `/api`. Ce déclencheur sert à la validation explicite, pas à des utilisateurs finaux. Ne jamais intégrer le secret dans l’interface. Il ne crée ni produit ni vérification ; le script opérateur les crée en base. Un démarrage incertain doit être inspecté avec le même identifiant ; B08 récupère automatiquement les démarrages non acquittés du dispatcher ; B09 traite les instances échouées.
 
 ## Vérification reproductible
 
@@ -55,6 +55,6 @@ Le 22 novembre 2026, sur le stage personnel `dev_raphael` :
 
 `bun run check`, `bun run typecheck`, `bun run test` (130 tests ordinaires) et `bun run build` passent ; `bun run db:test` passe avec 10 tests Neon.
 
-Aucun déploiement distant B07 n’est inclus dans ces preuves. Le stage cloud `dev` conserve le squelette B02 tant qu’un déploiement B07 n’a pas été réalisé. Les quotas globaux, la récupération des instances échouées et le parcours utilisateur restent à réaliser.
+Aucun déploiement distant B07 n’est inclus dans ces preuves. Le stage cloud `dev` conserve le squelette B02 tant qu’un déploiement B07 n’a pas été réalisé. La récupération des instances échouées est ajoutée en [B09](reconciliation.md) ; les quotas globaux et le parcours utilisateur restent à réaliser.
 
 Références vérifiées : [API Workflows](https://developers.cloudflare.com/workflows/build/workers-api/), [retries et délais](https://developers.cloudflare.com/workflows/build/sleeping-and-retrying/), [modes de redirection Workers](https://developers.cloudflare.com/workers/runtime-apis/request/). Les bindings Alchemy utilisent les types de la version **2.0.0-beta.87** installée.
