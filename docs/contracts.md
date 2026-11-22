@@ -2,7 +2,7 @@
 
 `@alba/contracts` exporte les schémas Zod 4.6.7 et les types TypeScript inférés. Sa seule dépendance d’exécution est Zod ; il peut être importé dans le navigateur, sans code serveur ni secret.
 
-Les contrats définissent les échanges à intégrer en B04–B10. Ils n’ajoutent pas de routes métier ni d’appel fournisseur. Le squelette Workflow B02 conserve `{ checkId }` jusqu’à B07 ; `PriceCheckParamsV1` définit le nouveau payload `{ version: 1, checkId }`.
+Les contrats définissent les échanges à intégrer en B04–B10. Ils n’ajoutent pas de routes métier ni d’appel fournisseur. Le Workflow B07 utilise `PriceCheckParamsV1`, soit `{ version: 1, checkId }` ; l’ancien payload du squelette B02 est refusé.
 
 ## Conventions
 
@@ -23,7 +23,7 @@ La validation d’URL reste syntaxique. La résolution DNS, les redirections, le
 
 `ExtractedPrice` contient `amount`, `currency`, `availability`, `title` nullable, `observedAt`, `sourceUrl` et la provenance `{ provider: "zyte", mode: "http" | "browser" }`. Il représente le prix normalisé d’une offre, sans structure brute Zyte ni HTML. B05 contrôle la correspondance entre requête et résultat (variante, pays, vendeur, devise), ainsi que le caractère exploitable du prix.
 
-`PriceObservationV1` associe ce prix à `id`, `productId` et `checkId`. `ProductV1` expose l’offre, son titre nullable, sa date de création et `currentObservation` nullable. B04 ajoute les références composites et lit l’observation courante par `observed_at DESC, id DESC`. L’assemblage de la réponse API et l’utilisation dans le Workflow restent à intégrer en B07/B10.
+`PriceObservationV1` associe ce prix à `id`, `productId` et `checkId`. `ProductV1` expose l’offre, son titre nullable, sa date de création et `currentObservation` nullable. B04 ajoute les références composites et lit l’observation courante par `observed_at DESC, id DESC`. Le Workflow B07 utilise cette finalisation ; l’assemblage de la réponse API reste en B10.
 
 ## API
 
@@ -54,11 +54,11 @@ La période d’un suivi doit être strictement croissante (`endsAt > startsAt`)
 - `failed` : `finishedAt` et erreur classée obligatoires ;
 - `cancelled` : `finishedAt` obligatoire.
 
-Les champs d’une autre branche sont refusés : une vérification en attente ne peut pas contenir une observation finale. B04 contraint les champs SQL selon le statut et les références vérification/observation/produit. `finalizeCheck` conserve le premier état terminal dans une transaction HTTP idempotente ; les autres transitions runtime restent à intégrer en B07/B10.
+Les champs d’une autre branche sont refusés : une vérification en attente ne peut pas contenir une observation finale. B04 contraint les champs SQL selon le statut et les références vérification/observation/produit. `finalizeCheck` conserve le premier état terminal dans une transaction HTTP idempotente ; B07 ajoute le passage atomique à `running` avec contexte figé ; les transitions des suivis restent en B10.
 
 ## Extraction et Workflow
 
-`PriceCheckParamsV1` contient uniquement la version et `checkId`. Le futur Workflow chargera puis figera le contexte depuis la base ; le déclencheur ne fournit pas d’URL ni de contexte alternatif.
+`PriceCheckParamsV1` contient uniquement la version et `checkId`. Le Workflow B07 charge puis fige le contexte depuis la base ; le déclencheur ne fournit pas d’URL ni de contexte alternatif.
 
 `ExtractionRequestV1` exige l’offre et un mode explicite `http` ou `browser`. Il n’active pas automatiquement un recours navigateur. Le serveur devra autoriser et plafonner chaque appel en B07/B14.
 
@@ -66,7 +66,7 @@ Les champs d’une autre branche sont refusés : une vérification en attente ne
 
 | Catégorie | Codes | Traitement attendu |
 | --- | --- | --- |
-| `temporary` | `network`, `timeout`, `rate_limited`, `provider_unavailable` | Reprises bornées à configurer dans le Workflow. |
+| `temporary` | `network`, `timeout`, `rate_limited`, `provider_unavailable` | Trois tentatives au maximum, attentes de 10 puis 20 secondes dans B07. |
 | `permanent` | `authentication`, `budget_exceeded`, `access_denied`, `unsupported_url`, `invalid_response` | Arrêt ; pas de reprise automatique illimitée. |
 | `business` | `missing_price`, `ambiguous_price`, `context_mismatch`, `currency_mismatch`, `product_not_found` | Résultat explicite sans observation invalide. |
 

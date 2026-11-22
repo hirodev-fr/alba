@@ -5,8 +5,8 @@
 | Ressource | Configuration |
 | --- | --- |
 | Web | Nuxt, preset Nitro `cloudflare_module`, URL workers.dev publique, binding `API` |
-| API | Hono/oRPC, workers.dev et URLs de preview désactivés, bindings `PRICE_CHECK` et secret `DATABASE_URL` |
-| Workflows | Classe exportée `PriceCheckWorkflow`, workers.dev et previews désactivés, secret `DATABASE_URL` |
+| API | Hono/oRPC, workers.dev et URLs de preview désactivés, bindings `PRICE_CHECK`, secrets `DATABASE_URL` et `WORKFLOW_VERIFY_TOKEN` |
+| Workflows | Classe exportée `PriceCheckWorkflow`, workers.dev et previews désactivés, secrets `DATABASE_URL` et `ZYTE_API_KEY`, politique `EXTRACTION_ENABLED` / `EXTRACTION_ALLOWED_HOSTS` |
 | PriceCheck | Workflow hébergé par Workflows, référence cross-worker dans API |
 | Database | Neon PostgreSQL 17, projet par stage, migrations Drizzle appliquées par Alchemy |
 
@@ -38,10 +38,10 @@ bun run infra:deploy
 Exécuter le contrôle cloud avec les sorties du déploiement :
 
 ```sh
-bun run infra:verify <webUrl> <workflowName>
+bun run infra:verify <webUrl>
 ```
 
-Ce contrôle utilise le profil local, vérifie HTTP et oRPC via Nuxt, crée une instance de Workflow avec un identifiant unique, attend son état terminal pendant au plus 60 secondes et vérifie le résultat du squelette. Chaque exécution laisse une instance de test soumise à la rétention Cloudflare. Il n’appelle ni Zyte ni Neon. Il échouera intentionnellement quand le contrat du squelette sera remplacé en B07 ; l’adapter alors au nouveau comportement.
+Ce contrôle vérifie uniquement HTTP et oRPC via Nuxt, sans appel Zyte ni Neon. Depuis B07, le contrôle du Workflow utilise `bun run workflow:verify <webUrl> --live` avec les secrets opérateur et SQL du stage correspondant. Il démarre l’instance via le binding API, puis contrôle la persistance et l’idempotence ; voir [configuration, preuves et injection de panne SQL](workflows.md). L’ancien payload du squelette B02 n’est plus accepté par le code B07.
 
 Pour le développement avec bindings, lancer `bunx alchemy dev` ou `bun run infra:dev`. Le CLI choisit son stage personnel (`dev_raphael` lors de la validation B04), distinct du stage déployé `dev`. Neon reste distant et Alchemy applique les migrations référencées par le projet. Ce mode est vérifié en B04 : Nuxt transmet les routes de santé HTTP/oRPC et les tests SQL Neon passent. La compatibilité Cloudflare utilise désormais `2026-11-02`, prise en charge par le workerd livré avec beta.87. Le chemin Nuxt est résolu de manière absolue pour fonctionner dans le processus enfant dev. Voir [la base B04](database.md). Avec les serveurs Bun/Nuxt classiques (`bun run dev`), le binding `API` est absent et `/api/*` retourne 503. Aucun repli vers une URL distante n’est implicite.
 
@@ -59,4 +59,8 @@ Le stage `dev` du profil local a été déployé et redéployé avec les mêmes 
 - Script final `infra:verify` : succès avec l’instance `b02-7755c91f-e04e-4a67-bfba-08be52bd4342`.
 - Plan final après redéploiement : `Plan: no changes`, toutes les ressources et tous les bindings en `noop`.
 
-Le déclenchement de cette instance utilise l’API de gestion Cloudflare. Le binding API → Workflow est provisionné ; son utilisation par la logique métier sera testée en B07. Les cookies, redirections d’authentification et droits utilisateurs seront validés en B11. Aucun cron, secret métier, schéma SQL ou traitement d’extraction n’est ajouté par B02. La CI GitHub continue à effectuer les contrôles locaux sans déployer. Les bindings SQL et migrations décrits plus haut sont ajoutés par B04 et validés avec `alchemy dev` ; ils n’ont pas été déployés aux Workers distants B02.
+Le déclenchement de cette instance utilise l’API de gestion Cloudflare. Le binding API → Workflow est provisionné ; son utilisation est désormais testée par B07 en runtime local (voir ci-dessous). Les cookies, redirections d’authentification et droits utilisateurs seront validés en B11. Aucun cron, secret métier, schéma SQL ou traitement d’extraction n’est ajouté par B02. La CI GitHub continue à effectuer les contrôles locaux sans déployer. Les bindings SQL et migrations décrits plus haut sont ajoutés par B04 et validés avec `alchemy dev` ; ils n’ont pas été déployés aux Workers distants B02.
+
+## Intégration B07
+
+Le 22 novembre 2026, Alchemy dev a assemblé les bindings B07 sur `dev_raphael`, avec Neon distant existant. Nuxt → API → Workflow local → Zyte → Neon est vérifié, ainsi que la reprise automatique d'une finalisation après panne SQL injectée. Aucun nouveau déploiement cloud `dev` : les preuves B02 ci-dessus restent historiques et ne prouvent pas B07 distant. Les secrets Zyte/opérateur restent serveur ; dépenses désactivées et liste d'hôtes vide par défaut. Voir [les preuves détaillées](workflows.md).
