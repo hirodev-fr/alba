@@ -5,7 +5,7 @@
 >
 > **Statut général :** monorepo compilé et testé ; infrastructure B02 déployée sur dev ; Neon provisionné et migré par alchemy dev sur le stage personnel ; transactions HTTP B04 vérifiées
 >
-> **Objectif immédiat :** implémenter Zyte B05, puis assembler la première vérification durable B07 sur les fondations SQL B04.
+> **Objectif immédiat :** assembler la première vérification durable B07 sur les fondations SQL B04.
 
 ## 1. Présentation du projet
 
@@ -272,7 +272,7 @@ alba/
 - `ExtractionResultV1` : union discriminée entre résultat exploitable et erreur métier.
 - Contrats API : création/modification d’un suivi, consultation du produit, historique et statut des vérifications.
 
-Ces contrats sont exportés par `@alba/contracts` avec leurs types inférés et des fixtures valides/invalides. Le résultat normalisé reste indépendant du schéma brut Zyte. Les [conventions et limites B03](docs/contracts.md) précisent les champs, les états et les validations. Le squelette Workflow B02 conserve son ancien payload jusqu’à l’intégration B07 ; les routes métier et l’adaptateur Zyte ne consomment pas encore ces contrats.
+Ces contrats sont exportés par `@alba/contracts` avec leurs types inférés et des fixtures valides/invalides. Le résultat normalisé reste indépendant du schéma brut Zyte. Les [conventions et limites B03](docs/contracts.md) précisent les champs, les états et les validations. Le squelette Workflow B02 conserve son ancien payload jusqu’à l’intégration B07 ; l’adaptateur Zyte consomme ces contrats ; les routes métier restent à intégrer.
 
 ## 7. Cycle d’une vérification et fiabilité
 
@@ -329,7 +329,7 @@ La base conserve la trace du travail à distribuer : une panne entre écriture S
 | Projet / branche Neon | PostgreSQL | B04 : projet personnel distant provisionné et migré par alchemy dev ; tests HTTP Neon passants |
 | Binding Web → API | Communication interne | Vérifié sur dev : HTTP et oRPC |
 | Binding API → Workflow | Création et consultation d’instances | Provisionné ; appel depuis API à tester en B07 |
-| Compte / clé Zyte | Extraction externe | À configurer et tester |
+| Compte / clé Zyte | Extraction externe | Appel HTTP B05 vérifié depuis Bun ; binding Workflow prévu en B07 |
 
 Les noms seront suffixés ou isolés par environnement. Les API exactes d’Alchemy doivent être validées contre une version épinglée ; ne pas mélanger la documentation v1 et la génération actuelle.
 
@@ -376,7 +376,7 @@ Corréler les logs avec `productId`, `checkId`, `workflowId` et la tentative fou
 | Ressources cloud B02 | Déployées sur dev ; Web → API HTTP/oRPC et squelette Workflow exécutés |
 | Contrats B03 | Schémas Zod API, extraction, observations et payload Workflow versionné ; fixtures valides/invalides testées localement |
 
-Le dépôt ne contenait initialement que ce document. La structure ci-dessus reste une cible : les packages auth et extraction restent des points de départ vides ; contracts contient B03, db le schéma/migrations B04 et tracking les opérations SQL partagées. Les 8 tests d’intégration B04 vérifient les contraintes, la finalisation concurrente/idempotente, la précision et le rollback SQL sur Neon réel. Voir [la base B04](docs/database.md). Les deux tests API vérifient les routes de santé et RPC ; les tests de contrats couvrent aussi les montants décimaux, les URL, le contexte d’offre et les unions de résultats et statuts. Le démarrage local de Nuxt et de l’API et leurs réponses HTTP ont également été vérifiés en B01. Le build Nuxt local utilise le preset Node, pas une validation Cloudflare.
+Le dépôt ne contenait initialement que ce document. La structure ci-dessus reste une cible : le package auth reste un point de départ vide ; extraction contient l’adaptateur HTTP B05 vérifié ; contracts contient B03, db le schéma/migrations B04 et tracking les opérations SQL partagées. Les 8 tests d’intégration B04 vérifient les contraintes, la finalisation concurrente/idempotente, la précision et le rollback SQL sur Neon réel. Voir [la base B04](docs/database.md). Les deux tests API vérifient les routes de santé et RPC ; les tests de contrats couvrent aussi les montants décimaux, les URL, le contexte d’offre et les unions de résultats et statuts. Le démarrage local de Nuxt et de l’API et leurs réponses HTTP ont également été vérifiés en B01. Le build Nuxt local utilise le preset Node, pas une validation Cloudflare.
 
 ## 10. Nouveau plan d’exécution et suivi
 
@@ -388,7 +388,7 @@ Les identifiants **Bxx** remplacent le plan Axx de l’ancienne architecture Pyt
 | B02 | Versions et infrastructure | Version Alchemy épinglée ; premier déploiement reproductible | Réalisé sur dev : trois Workers, Workflow et bindings provisionnés ; santé via Nuxt et exécution du squelette vérifiées ; redéploiement réussi |
 | B03 | Contrats Zod | Contrats API et extraction, fixtures valides/invalides | Réalisé localement : schémas stricts versionnés, types inférés, fixtures et tests Bun ; intégrations runtime prévues en B05–B10 |
 | B04 | Neon + Drizzle | Schéma, migrations et transactions atomiques validés ; contraintes d’unicité permettant une finalisation idempotente | Réalisé : projet personnel provisionné/migré avec alchemy dev ; 8 tests Neon HTTP passants, finalisation concurrente et rollback SQL vérifiés ; aucun déploiement Worker B04 |
-| B05 | Adaptateur Zyte | Extraction HTTP réelle normalisée ; erreurs classées | Non commencé |
+| B05 | Adaptateur Zyte | Extraction HTTP réelle normalisée ; erreurs classées | Réalisé : client HTTP, mapping et erreurs classées ; 24 tests simulés et extraction Zyte réelle à 51.77 GBP vérifiés (voir docs/extraction.md) |
 | B06 | Benchmark extraction | Échantillon représentatif, exactitude et coût mesurés | Non commencé |
 | B07 | Première vérification durable | Extraction réelle persistée ; finalisation répétée sans doublon ; erreurs temporaires, définitives et métier distinguées ; reprise après panne SQL sans rejouer une extraction déjà durablement enregistrée | Non commencé |
 | B08 | Dispatcher | Échéances réservées et workflows démarrés sans perte de tâche | Non commencé |
@@ -453,7 +453,7 @@ La validation couvre également :
 - le recours navigateur seulement lorsqu’il est autorisé ;
 - les migrations, secrets et environnements isolés.
 
-**Prochaine action :** implémenter B05, puis assembler B07 sur les opérations SQL B04 déjà testées pour la première vérification durable : une instance Workflow appelle Zyte en HTTP et persiste une observation valide dans Neon, avec finalisation idempotente, erreurs classées et reprise après panne SQL vérifiées dès ce livrable.
+**Prochaine action :** assembler B07 sur les opérations SQL B04 déjà testées pour la première vérification durable : une instance Workflow appelle Zyte en HTTP et persiste une observation valide dans Neon, avec finalisation idempotente, erreurs classées et reprise après panne SQL vérifiées dès ce livrable.
 
 ## 13. Références techniques
 

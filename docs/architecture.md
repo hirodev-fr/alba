@@ -10,7 +10,7 @@ API → binding PRICE_CHECK provisionné → Worker Workflows (squelette)
 Neon B04 : schéma migré par Alchemy ; opérations SQL partagées testées via HTTP
 ```
 
-Les trois Workers et le Workflow sont déployés sur le stage `dev`. Seul Nuxt possède une URL workers.dev ; API et Workflows restent internes. HTTP et oRPC ont été vérifiés via Nuxt. Une instance du squelette a terminé via l’API de gestion Cloudflare ; le déclenchement par le Worker API reste à valider en B07. Les routes de suivi et les appels Zyte restent à implémenter. B04 ajoute les opérations SQL partagées testées sur Neon depuis Bun ; leur utilisation depuis les Workers reste à intégrer en B07/B10. Voir [les preuves et commandes](infrastructure.md).
+Les trois Workers et le Workflow sont déployés sur le stage `dev`. Seul Nuxt possède une URL workers.dev ; API et Workflows restent internes. HTTP et oRPC ont été vérifiés via Nuxt. Une instance du squelette a terminé via l’API de gestion Cloudflare ; le déclenchement par le Worker API reste à valider en B07. Les routes de suivi restent à implémenter. Le package extraction contient désormais le client HTTP Zyte B05 ; son branchement au Workflow relève de B07. B04 ajoute les opérations SQL partagées testées sur Neon depuis Bun ; leur utilisation depuis les Workers reste à intégrer en B07/B10. Voir [les preuves et commandes](infrastructure.md).
 
 ## Applications
 
@@ -31,12 +31,12 @@ Les trois applications correspondent aux Workers déclarés par Alchemy. Le cron
 | `packages/contracts` | Contrats Zod B03, types inférés et fixtures API/extraction/Workflow. | Schémas et types partagés sans code serveur. |
 | `packages/auth` | Point d’entrée réservé. | Authentification. |
 | `packages/tracking` | Finalisation idempotente et lecture du prix courant. | Logique métier commune aux applications serveur. |
-| `packages/extraction` | Point d’entrée réservé. | Adaptateur d’extraction et normalisation des résultats. |
+| `packages/extraction` | Client HTTP Zyte et mapping B03, tests simulés. | Adaptateur d’extraction et normalisation des résultats. |
 | `packages/config` | Configuration TypeScript stricte partagée. | Conventions techniques communes. |
 
 Les workspaces consomment les points d’entrée TypeScript de leurs dépendances internes. Les applications assemblent les packages ; les secrets, accès SQL et implémentations serveur ne doivent pas être importés dans le code navigateur.
 
-Les [contrats B03](contracts.md) définissent les entrées et réponses métier, le contexte d’offre, les montants décimaux, les observations et les erreurs classées. Leur validation est testée localement. Les routes métier et l’utilisation de ces contrats par l’adaptateur Zyte et le Workflow restent à implémenter ; le squelette B02 conserve son ancien payload jusqu’à B07.
+Les [contrats B03](contracts.md) définissent les entrées et réponses métier, le contexte d’offre, les montants décimaux, les observations et les erreurs classées. Leur validation est testée localement. L’adaptateur Zyte consomme ces contrats ; les routes métier et le Workflow restent à intégrer ; le squelette B02 conserve son ancien payload jusqu’à B07.
 
 ## Flux cible
 
