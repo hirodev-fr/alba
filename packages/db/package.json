@@ -5,13 +5,16 @@
   "type": "module",
   "exports": "./src/index.ts",
   "scripts": {
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "db:generate": "drizzle-kit generate"
   },
   "dependencies": {
+    "@alba/contracts": "workspace:*",
     "@neondatabase/serverless": "1.2.1",
-    "drizzle-orm": "0.45.4"
+    "drizzle-orm": "1.0.0-rc.6"
   },
   "devDependencies": {
-    "@alba/config": "workspace:*"
+    "@alba/config": "workspace:*",
+    "drizzle-kit": "1.0.0-rc.6"
   }
 }
