@@ -1,0 +1,16 @@
+{
+  "name": "@alba/api",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": "./src/index.ts",
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@orpc/server": "1.16.4"
+  },
+  "devDependencies": {
+    "@alba/config": "workspace:*"
+  }
+}

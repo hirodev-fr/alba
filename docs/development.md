@@ -1,0 +1,68 @@
+# Développement
+
+## Prérequis et installation
+
+Le projet utilise les workspaces Bun et Turborepo. Bun **1.4.4** est déclaré dans `package.json` ; les vérifications locales ont été exécutées avec Node.js **22**.
+
+Depuis la racine :
+
+```sh
+bun install --frozen-lockfile
+```
+
+Cette commande installe les dépendances à partir de `bun.lock` sans le modifier. Après un changement intentionnel de dépendance, utiliser `bun install` et conserver le lockfile mis à jour avec les manifests concernés.
+
+## Serveurs locaux
+
+```sh
+bun run dev
+```
+
+Turborepo lance les deux tâches de développement disponibles :
+
+| Service | Adresse | Comportement |
+| --- | --- | --- |
+| Web | <http://localhost:3000> | Page Nuxt provisoire. |
+| API | <http://localhost:3001> | Serveur Bun avec rechargement, exposant Hono et oRPC. |
+
+Le port 3001 doit être disponible pour l’API ; Nuxt utilise le port 3000 par défaut. `Ctrl+C` arrête les tâches. Le Workflow n’a pas de serveur de développement local configuré. Le serveur Bun permet de développer l’API, mais ne reproduit pas le runtime Cloudflare Workers.
+
+Pour contrôler l’API sans navigateur :
+
+```sh
+curl -fsS http://localhost:3001/health
+curl -fsS -X POST http://localhost:3001/rpc/health \
+  -H 'content-type: application/json' -d '{}'
+```
+
+Les réponses attendues sont respectivement `{"status":"ok"}` et `{"json":{"status":"ok"}}`. Il n’existe pas encore de proxy depuis Nuxt vers l’API ; ces URL servent uniquement au développement local.
+
+## Commandes de vérification
+
+Toutes les commandes suivantes se lancent depuis la racine :
+
+| Commande | Effet |
+| --- | --- |
+| `bun run check` | Vérifie le formatage et le lint via Ultracite, sans modifier les fichiers. |
+| `bun run fix` | Applique les corrections et le formatage automatiques ; des erreurs peuvent nécessiter une correction manuelle. |
+| `bunx ultracite doctor` | Diagnostique l’installation et les configurations Ultracite, Oxlint et Oxfmt. |
+| `bun run typecheck` | Vérifie la configuration Alchemy racine, puis les workspaces qui déclarent cette tâche. |
+| `bun run test` | Exécute les tests déclarés dans les workspaces ; actuellement, ceux de l’API. |
+| `bun run build` | Construit les applications Web, API et Workflows. |
+
+Les tests actuels couvrent les routes de santé HTTP et oRPC ainsi qu’une route RPC absente. Le build Nuxt utilise localement le preset Nitro `node-server` ; les builds API et Workflows sont des bundles Bun. Ils ne prouvent pas que les applications fonctionnent dans `workerd` ou sur Cloudflare.
+
+Ultracite 8 utilise les configurations racine `oxlint.config.mts` et `oxfmt.config.mts`. Exécuter `bun run check` après modification ; `bun run fix` modifie les fichiers concernés. Les exceptions ciblées présentes dans les squelettes correspondent aux points d’entrée vides et à la méthode requise par Cloudflare.
+
+## Environnement et secrets
+
+Les commandes ci-dessus fonctionnent sans fichier `.env`. Le fichier [`.env.example`](../.env.example) répertorie des variables **prévues**, non branchées aux applications actuelles : connexion Neon, Better Auth, Zyte et credentials de provisionnement. Ne pas les renseigner dans du code destiné au navigateur ni versionner leurs valeurs. `.env`, ses variantes et les fichiers `.dev.vars` sont ignorés par Git.
+
+Ne pas considérer ces noms ou exemples comme une configuration de production complète : les bindings, la validation des variables et la distribution des secrets restent à implémenter.
+
+## Dépannage
+
+- **Installation non reproductible** : vérifier la version de Bun, puis la cohérence entre les manifests et `bun.lock`. Ne pas remplacer `--frozen-lockfile` silencieusement dans une vérification.
+- **Port occupé** : arrêter le processus utilisant le port concerné avant de relancer le développement.
+- **Erreurs de format ou de lint** : consulter la sortie de `bun run check`, puis appliquer `bun run fix` et corriger les erreurs restantes. `bunx ultracite doctor` aide à diagnostiquer l’installation.
+- **Échec lié à un service externe** : aucun service cloud n’est nécessaire au parcours local décrit ici ; vérifier qu’une commande ou une modification supplémentaire ne tente pas d’y accéder.

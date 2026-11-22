@@ -1,0 +1,17 @@
+{
+  "name": "@alba/db",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": "./src/index.ts",
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@neondatabase/serverless": "1.2.1",
+    "drizzle-orm": "0.45.4"
+  },
+  "devDependencies": {
+    "@alba/config": "workspace:*"
+  }
+}
