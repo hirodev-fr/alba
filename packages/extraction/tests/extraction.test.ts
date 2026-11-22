@@ -20,6 +20,7 @@ test("HTTP extraction sends explicit mode and preserves decimal precision", asyn
   const calls: RequestInit[] = [];
   const extract = createZyteExtractor({
     apiKey: "test-key",
+    tags: { alba_benchmark: "test-run" },
     fetch: (_url, init) => {
       calls.push(init);
       return Promise.resolve(
@@ -40,6 +41,7 @@ test("HTTP extraction sends explicit mode and preserves decimal precision", asyn
     url: request.offer.url,
     product: true,
     productOptions: { extractFrom: "httpResponseBody" },
+    tags: { alba_benchmark: "test-run" },
   });
   expect(result.status).toBe("success");
   if (result.status === "success") {

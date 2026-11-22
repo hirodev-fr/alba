@@ -19,7 +19,9 @@
     "test": "turbo run test",
     "check": "ultracite check",
     "fix": "ultracite fix",
-    "extraction:verify": "bun --env-file=.env scripts/verify-extraction.ts"
+    "extraction:verify": "bun --env-file=.env scripts/verify-extraction.ts",
+    "extraction:benchmark": "bun --env-file=.env scripts/benchmark-extraction.ts",
+    "extraction:cost": "bun --env-file=.env scripts/benchmark-cost.ts"
   },
   "devDependencies": {
     "@alchemy.run/cloudflare": "2.0.0-beta.87",

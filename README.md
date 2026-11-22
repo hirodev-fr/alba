@@ -26,6 +26,7 @@ Aucune variable d’environnement ni aucun service externe ne sont nécessaires 
 
 - [Développement](docs/development.md) : commandes, tests, configuration locale, CI GitHub et dépannage.
 - [Architecture](docs/architecture.md) : applications, packages, flux cible et limites des intégrations.
+- [Benchmark B06](docs/extraction-benchmark.md) : corpus, exactitude, coût réel et limites de couverture.
 - [Extraction B05](docs/extraction.md) : adaptateur HTTP, politique URL et validation réelle explicite.
 - [Base de données B04](docs/database.md) : schéma, migrations Alchemy et tests Neon.
 - [Contrats B03](docs/contracts.md) : schémas API, extraction, Workflow et fixtures de validation.

@@ -1,0 +1,13 @@
+{
+  "runId": "b06-0e4e79ea-37e1-4662-b0cb-100609bf516c",
+  "retrievedAt": "2026-11-22T17:32:31.121Z",
+  "startTime": "2026-11-22T17:29:05.772Z",
+  "endTime": "2026-11-22T17:30:08.089Z",
+  "total_result_count": 1,
+  "results": [
+    {
+      "request_count": 12,
+      "cost_microusd_total": "6733.00"
+    }
+  ]
+}

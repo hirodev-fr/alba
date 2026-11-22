@@ -1,0 +1,88 @@
+{
+  "runId": "b06-0e4e79ea-37e1-4662-b0cb-100609bf516c",
+  "startedAt": "2026-11-22T17:29:05.772Z",
+  "finishedAt": "2026-11-22T17:30:08.089Z",
+  "summary": {
+    "attempted": 12,
+    "validObservations": 6,
+    "extracted": 6,
+    "verified": 11,
+    "correct": 8,
+    "accuracy": 0.7272727272727273,
+    "coverage": 0.5,
+    "latencyP50Ms": 2308,
+    "latencyP95Ms": 18386
+  },
+  "version": 1,
+  "corpusSha256": "564e9791c99ce789cde6a5fc65ef0e4b2d5a73a40d3f70de7fb24cb5908a65f1",
+  "mode": "http",
+  "retries": 0,
+  "browserRequests": 0,
+  "planned": 12,
+  "complete": true,
+  "segments": {
+    "control": {
+      "attempted": 1,
+      "extracted": 1,
+      "verified": 1,
+      "correct": 1,
+      "validObservations": 1,
+      "accuracy": 1,
+      "coverage": 1,
+      "latencyP50Ms": 2308,
+      "latencyP95Ms": 2308
+    },
+    "retail": {
+      "attempted": 6,
+      "extracted": 5,
+      "verified": 5,
+      "correct": 5,
+      "validObservations": 5,
+      "accuracy": 1,
+      "coverage": 0.8333333333333334,
+      "latencyP50Ms": 2365,
+      "latencyP95Ms": 18386
+    },
+    "context": {
+      "attempted": 3,
+      "extracted": 0,
+      "verified": 3,
+      "correct": 0,
+      "validObservations": 0,
+      "accuracy": 0,
+      "coverage": 0,
+      "latencyP50Ms": 1731,
+      "latencyP95Ms": 3023
+    },
+    "negative": {
+      "attempted": 2,
+      "extracted": 0,
+      "verified": 2,
+      "correct": 2,
+      "validObservations": 0,
+      "accuracy": 1,
+      "coverage": 0,
+      "latencyP50Ms": 1783,
+      "latencyP95Ms": 2944
+    }
+  },
+  "cost": {
+    "status": "measured",
+    "currency": "USD",
+    "requests": 12,
+    "total": "0.00673300",
+    "perRequest": {
+      "numeratorUsd": "0.00673300",
+      "denominator": 12
+    },
+    "perValidObservation": {
+      "numeratorUsd": "0.00673300",
+      "denominator": 6
+    },
+    "runId": "b06-0e4e79ea-37e1-4662-b0cb-100609bf516c",
+    "retrievedAt": "2026-11-22T17:32:31.136Z",
+    "source": "Zyte Stats /api/stats filtered by unique alba_benchmark tag; HTTP + product extraction combined. Browser and retries: zero."
+  },
+  "originalInputSha256": "e1e9020d8801afdb309d4857aabdd848ce5e0fe023e1c395da917fe1409d19ed",
+  "corpusHashEncoding": "JSON.stringify(parsed corpus), UTF-8"
+}

@@ -10,6 +10,7 @@ export interface ZyteOptions {
   apiKey: string;
   allowedHosts?: readonly string[];
   timeoutMs?: number;
+  tags?: Readonly<Record<string, string>>;
   fetch?: (url: string, init: RequestInit) => Promise<Response>;
 }
 
@@ -62,6 +63,7 @@ export const createZyteExtractor = (options: ZyteOptions) => {
           url: request.offer.url,
           product: true,
           productOptions: { extractFrom: "httpResponseBody" },
+          ...(options.tags === undefined ? {} : { tags: options.tags }),
           ...(request.offer.context.country === null
             ? {}
             : { geolocation: request.offer.context.country }),

@@ -1,0 +1,296 @@
+[
+  {
+    "id": "books-control",
+    "segment": "control",
+    "startedAt": "2026-11-22T17:29:05.773Z",
+    "durationMs": 2308,
+    "result": {
+      "version": 1,
+      "status": "success",
+      "price": {
+        "amount": "51.77",
+        "currency": "GBP",
+        "availability": "in_stock",
+        "title": "A Light in the Attic",
+        "observedAt": "2026-11-22T17:29:08.076Z",
+        "sourceUrl": "https://books.toscrape.com/catalogue/a-light-in-the-attic_1000/index.html",
+        "provenance": {
+          "provider": "zyte",
+          "mode": "http"
+        }
+      }
+    },
+    "evaluation": {
+      "verdict": "correct",
+      "amount": true,
+      "currency": true,
+      "availability": true
+    }
+  },
+  {
+    "id": "ikea-fr",
+    "segment": "retail",
+    "startedAt": "2026-11-22T17:29:08.088Z",
+    "durationMs": 2365,
+    "result": {
+      "version": 1,
+      "status": "success",
+      "price": {
+        "amount": "9.99",
+        "currency": "EUR",
+        "availability": "in_stock",
+        "title": "LACK",
+        "observedAt": "2026-11-22T17:29:10.452Z",
+        "sourceUrl": "https://www.ikea.com/fr/fr/p/lack-table-dappoint-blanc-30449908/",
+        "provenance": {
+          "provider": "zyte",
+          "mode": "http"
+        }
+      }
+    },
+    "evaluation": {
+      "verdict": "correct",
+      "amount": true,
+      "currency": true,
+      "availability": null
+    }
+  },
+  {
+    "id": "ikea-fr-variant",
+    "segment": "context",
+    "startedAt": "2026-11-22T17:29:10.453Z",
+    "durationMs": 3023,
+    "result": {
+      "version": 1,
+      "status": "error",
+      "error": {
+        "category": "business",
+        "code": "context_mismatch",
+        "message": "Requested offer context could not be verified."
+      }
+    },
+    "evaluation": {
+      "verdict": "incorrect",
+      "amount": false,
+      "currency": false,
+      "availability": null
+    }
+  },
+  {
+    "id": "ikea-fr-seller",
+    "segment": "context",
+    "startedAt": "2026-11-22T17:29:13.478Z",
+    "durationMs": 1731,
+    "result": {
+      "version": 1,
+      "status": "error",
+      "error": {
+        "category": "business",
+        "code": "context_mismatch",
+        "message": "Requested offer context could not be verified."
+      }
+    },
+    "evaluation": {
+      "verdict": "incorrect",
+      "amount": false,
+      "currency": false,
+      "availability": null
+    }
+  },
+  {
+    "id": "ikea-gb",
+    "segment": "retail",
+    "startedAt": "2026-11-22T17:29:15.210Z",
+    "durationMs": 2162,
+    "result": {
+      "version": 1,
+      "status": "success",
+      "price": {
+        "amount": "10.0",
+        "currency": "GBP",
+        "availability": "in_stock",
+        "title": "LACK Side table, white, 55x55 cm",
+        "observedAt": "2026-11-22T17:29:17.373Z",
+        "sourceUrl": "https://www.ikea.com/gb/en/p/lack-side-table-white-30449908/",
+        "provenance": {
+          "provider": "zyte",
+          "mode": "http"
+        }
+      }
+    },
+    "evaluation": {
+      "verdict": "correct",
+      "amount": true,
+      "currency": true,
+      "availability": null
+    }
+  },
+  {
+    "id": "ikea-removed",
+    "segment": "negative",
+    "startedAt": "2026-11-22T17:29:17.374Z",
+    "durationMs": 2944,
+    "result": {
+      "version": 1,
+      "status": "error",
+      "error": {
+        "category": "business",
+        "code": "missing_price",
+        "message": "No offer price extracted."
+      }
+    },
+    "evaluation": {
+      "verdict": "correct",
+      "amount": null,
+      "currency": null,
+      "availability": null
+    }
+  },
+  {
+    "id": "lego-roses",
+    "segment": "retail",
+    "startedAt": "2026-11-22T17:29:20.319Z",
+    "durationMs": 18386,
+    "result": {
+      "version": 1,
+      "status": "success",
+      "price": {
+        "amount": "14.99",
+        "currency": "EUR",
+        "availability": "in_stock",
+        "title": "Les roses",
+        "observedAt": "2026-11-22T17:29:38.707Z",
+        "sourceUrl": "https://www.lego.com/fr-fr/product/roses-40460?age-gate=grown_up",
+        "provenance": {
+          "provider": "zyte",
+          "mode": "http"
+        }
+      }
+    },
+    "evaluation": {
+      "verdict": "correct",
+      "amount": true,
+      "currency": true,
+      "availability": true
+    }
+  },
+  {
+    "id": "lush-intergalactic",
+    "segment": "retail",
+    "startedAt": "2026-11-22T17:29:38.708Z",
+    "durationMs": 17296,
+    "result": {
+      "version": 1,
+      "status": "success",
+      "price": {
+        "amount": "8.0",
+        "currency": "EUR",
+        "availability": "in_stock",
+        "title": "Intergalactic",
+        "observedAt": "2026-11-22T17:29:56.005Z",
+        "sourceUrl": "https://www.lush.com/fr/fr/p/intergalactic-bath-bomb",
+        "provenance": {
+          "provider": "zyte",
+          "mode": "http"
+        }
+      }
+    },
+    "evaluation": {
+      "verdict": "correct",
+      "amount": true,
+      "currency": true,
+      "availability": true
+    }
+  },
+  {
+    "id": "apple-airtag-one",
+    "segment": "retail",
+    "startedAt": "2026-11-22T17:29:56.005Z",
+    "durationMs": 1842,
+    "result": {
+      "version": 1,
+      "status": "success",
+      "price": {
+        "amount": "35.0",
+        "currency": "EUR",
+        "availability": "unknown",
+        "title": "Acheter un AirTag",
+        "observedAt": "2026-11-22T17:29:57.847Z",
+        "sourceUrl": "https://www.apple.com/fr/shop/buy-airtag/airtag/pack-de-1",
+        "provenance": {
+          "provider": "zyte",
+          "mode": "http"
+        }
+      }
+    },
+    "evaluation": {
+      "verdict": "correct",
+      "amount": true,
+      "currency": true,
+      "availability": null
+    }
+  },
+  {
+    "id": "patagonia-jacket",
+    "segment": "context",
+    "startedAt": "2026-11-22T17:29:57.848Z",
+    "durationMs": 1640,
+    "result": {
+      "version": 1,
+      "status": "error",
+      "error": {
+        "category": "business",
+        "code": "context_mismatch",
+        "message": "Requested offer context could not be verified."
+      }
+    },
+    "evaluation": {
+      "verdict": "incorrect",
+      "amount": false,
+      "currency": false,
+      "availability": null
+    }
+  },
+  {
+    "id": "raspberry-multiple",
+    "segment": "negative",
+    "startedAt": "2026-11-22T17:29:59.488Z",
+    "durationMs": 1783,
+    "result": {
+      "version": 1,
+      "status": "error",
+      "error": {
+        "category": "business",
+        "code": "missing_price",
+        "message": "No offer price extracted."
+      }
+    },
+    "evaluation": {
+      "verdict": "correct",
+      "amount": null,
+      "currency": null,
+      "availability": null
+    }
+  },
+  {
+    "id": "decathlon-football",
+    "segment": "retail",
+    "startedAt": "2026-11-22T17:30:01.272Z",
+    "durationMs": 6816,
+    "result": {
+      "version": 1,
+      "status": "error",
+      "error": {
+        "category": "business",
+        "code": "missing_price",
+        "message": "No offer price extracted."
+      }
+    },
+    "evaluation": {
+      "verdict": "unverified",
+      "amount": null,
+      "currency": null,
+      "availability": null
+    }
+  }
+]

@@ -60,7 +60,7 @@ Ultracite 8 utilise les configurations racine `oxlint.config.mts` et `oxfmt.conf
 
 ## Environnement et secrets
 
-`check`, `typecheck`, `test` et `build` fonctionnent sans fichier `.env`. `alchemy dev` utilise les profils Cloudflare/Neon, ou les credentials de provisionnement serveur décrits dans [`.env.example`](../.env.example). Alchemy injecte la connexion Neon en secret dans API et Workflows. Pour `db:test`, configurer `DATABASE_URL` dans le `.env` racine après provisionnement du projet personnel. Better Auth et Zyte restent des variables prévues. Ne pas les renseigner dans du code destiné au navigateur ni versionner leurs valeurs. `.env`, ses variantes et les fichiers `.dev.vars` sont ignorés par Git.
+`check`, `typecheck`, `test` et `build` fonctionnent sans fichier `.env`. `alchemy dev` utilise les profils Cloudflare/Neon, ou les credentials de provisionnement serveur décrits dans [`.env.example`](../.env.example). Alchemy injecte la connexion Neon en secret dans API et Workflows. Pour `db:test`, configurer `DATABASE_URL` dans le `.env` racine après provisionnement du projet personnel. Better Auth reste une variable prévue ; les clés Zyte servent aux commandes explicites B05/B06, sans binding Workflow à ce stade. Ne pas les renseigner dans du code destiné au navigateur ni versionner leurs valeurs. `.env`, ses variantes et les fichiers `.dev.vars` sont ignorés par Git.
 
 Ne pas considérer ces noms ou exemples comme une configuration de production complète : les bindings sont déclarés par Alchemy ; la validation et l’utilisation des variables métier dans les points d’entrée applicatifs restent à intégrer.
 
@@ -108,3 +108,7 @@ Dependabot ouvre par défaut ses pull requests vers la branche par défaut, actu
 ## Extraction B05
 
 `bun run extraction:verify` effectue un appel Zyte réel sur le livre de référence avec `ZYTE_API_KEY` du `.env` local ignoré. Les tests ordinaires restent sans réseau ni clé. Voir [le guide extraction](extraction.md).
+
+## Benchmark B06
+
+`bun run extraction:benchmark --validate <corpus.json>` valide un corpus hors réseau. `--live <corpus.json> <nouveau-répertoire>` mesure les extractions avec `ZYTE_API_KEY`. `bun run extraction:cost <répertoire>` rapproche le coût avec la clé Dashboard `ZYTE_STATS_API_KEY` et `ZYTE_ORGANIZATION_ID` (alias `ZYTE_ORGANISATION_ID`). Ces commandes explicites sont exclues des tests ordinaires et de la CI ; les tests du calcul des métriques et du coût restent sans réseau. Voir [méthode, résultats et limites B06](extraction-benchmark.md).

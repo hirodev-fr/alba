@@ -1,0 +1,17 @@
+{
+  "status": "measured",
+  "currency": "USD",
+  "requests": 12,
+  "total": "0.00673300",
+  "perRequest": {
+    "numeratorUsd": "0.00673300",
+    "denominator": 12
+  },
+  "perValidObservation": {
+    "numeratorUsd": "0.00673300",
+    "denominator": 6
+  },
+  "runId": "b06-0e4e79ea-37e1-4662-b0cb-100609bf516c",
+  "retrievedAt": "2026-11-22T17:32:31.136Z",
+  "source": "Zyte Stats /api/stats filtered by unique alba_benchmark tag; HTTP + product extraction combined. Browser and retries: zero."
+}
