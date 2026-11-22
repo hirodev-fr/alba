@@ -24,7 +24,7 @@ Aucune variable d’environnement ni aucun service externe ne sont nécessaires 
 
 ## Documentation
 
-- [Développement](docs/development.md) : commandes, tests, configuration locale et dépannage.
+- [Développement](docs/development.md) : commandes, tests, configuration locale, CI GitHub et dépannage.
 - [Architecture](docs/architecture.md) : applications, packages, flux cible et limites des intégrations.
 - [Suivi du projet](ALBA_PROGRESS.md) : décisions, risques, chantiers et état d’avancement.
 - [Conventions pour les agents](AGENTS.md) : règles du dépôt et références techniques.

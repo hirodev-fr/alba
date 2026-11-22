@@ -394,7 +394,7 @@ Les identifiants **Bxx** remplacent le plan Axx de l’ancienne architecture Pyt
 | B12 | Interface Nuxt | Création d’un suivi, historique et états affichés | Non commencé |
 | B13 | Durcissement et budgets | Approfondir les tests de panne et de concurrence ; quotas, sécurité URL et observabilité ; compléter les garanties déjà présentes en B04–B07 | Non commencé |
 | B14 | Recours navigateur Zyte | Politique explicite, tests ciblés et plafond de dépense | Non commencé |
-| B15 | CI et environnements | Checks, fixtures, migrations et déploiement isolés | Non commencé |
+| B15 | CI et environnements | Checks, fixtures, migrations et déploiement isolés | Partiel : workflows CI et CodeQL et configuration Dependabot ajoutés ; exécution GitHub, migrations et déploiement isolé à valider |
 | B16 | Validation bout en bout | URL → Workflow → Zyte → Neon → UI, puis renouvellement cron | Non commencé |
 
 ### Jalons
@@ -468,8 +468,12 @@ Documentation à revérifier contre les versions retenues lors de l’implément
 
 ### Livrable fondations — limites vérifiées
 
-Alchemy 2.0.0-beta.87, son provider Cloudflare et son intégration frontend sont épinglés ensemble ; cette génération bêta utilise Effect et diffère de la v1. `alchemy.run.ts` ne décrit que le site Nuxt : il est typé, mais son build Cloudflare, son état et son déploiement ne sont pas validés. Les Workers API et Workflow ne sont pas encore provisionnés ni reliés. Le Workflow est un squelette sans traitement et ne doit pas être considéré opérationnel. Neon/Drizzle expose seulement une fabrique HTTP : aucune connexion, transaction ou migration n’a été essayée. Better Auth, Nuxt UI, Query, Zyte, cron, proxy service binding, CI et qualité complémentaire restent à intégrer. Aucun appel Zyte ou déploiement cloud effectué.
+Alchemy 2.0.0-beta.87, son provider Cloudflare et son intégration frontend sont épinglés ensemble ; cette génération bêta utilise Effect et diffère de la v1. `alchemy.run.ts` ne décrit que le site Nuxt : il est typé, mais son build Cloudflare, son état et son déploiement ne sont pas validés. Les Workers API et Workflow ne sont pas encore provisionnés ni reliés. Le Workflow est un squelette sans traitement et ne doit pas être considéré opérationnel. Neon/Drizzle expose seulement une fabrique HTTP : aucune connexion, transaction ou migration n’a été essayée. Better Auth, Nuxt UI, Query, Zyte, cron, proxy service binding et qualité complémentaire restent à intégrer ; les workflows GitHub ajoutés doivent encore être exécutés sur GitHub. Aucun appel Zyte ou déploiement cloud effectué.
 
 ### Documentation du dépôt
 
 Le [README](README.md), le [guide de développement](docs/development.md) et la [présentation de l’architecture](docs/architecture.md) documentent les commandes disponibles, les frontières actuelles et les intégrations restant à valider. Ultracite, Oxlint et Oxfmt sont configurés ; `bun run check` et `bun run fix` sont disponibles.
+
+### CI et sécurité GitHub
+
+Les workflows versionnés exécutent les contrôles locaux et CodeQL ; Dependabot surveille Bun et les actions. Actionlint et les commandes de CI ont été vérifiés localement ; leur fonctionnement sur GitHub/Linux reste à confirmer après publication. La version Node sélectionnée par `.node-version` est 24.22.3. Les migrations, environnements isolés et déploiements restent hors du périmètre actuel.

@@ -66,3 +66,11 @@ Ne pas considérer ces noms ou exemples comme une configuration de production co
 - **Port occupé** : arrêter le processus utilisant le port concerné avant de relancer le développement.
 - **Erreurs de format ou de lint** : consulter la sortie de `bun run check`, puis appliquer `bun run fix` et corriger les erreurs restantes. `bunx ultracite doctor` aide à diagnostiquer l’installation.
 - **Échec lié à un service externe** : aucun service cloud n’est nécessaire au parcours local décrit ici ; vérifier qu’une commande ou une modification supplémentaire ne tente pas d’y accéder.
+
+## Intégration continue GitHub
+
+Le workflow `CI` se déclenche sur les push, pull requests, merge queues et manuellement. Le job `Verify` installe la version de Node indiquée dans `.node-version` et la version de Bun définie par `packageManager`, puis exécute l’installation figée, `check`, `typecheck`, `test` et `build`. Les actions sont épinglées par SHA ; aucun secret ni déploiement n’est nécessaire. Une nouvelle exécution annule la précédente pour une même pull request.
+
+Le workflow `CodeQL` analyse JavaScript et TypeScript sur les pull requests, les push vers `dev` et `main`, chaque semaine et manuellement. La configuration Dependabot propose chaque semaine des mises à jour pour Bun et les actions GitHub ; son activation et les premiers résultats dépendent de GitHub et de la branche par défaut. CodeQL nécessite l’activation et la disponibilité de la sécurité GitHub pour le dépôt.
+
+Après publication des workflows, vérifier leurs premières exécutions dans l’onglet Actions et, si souhaité, configurer une règle de protection pour exiger le job `Verify` avant fusion. Ces fichiers ne configurent ni protections de branche ni déploiement. Le build Nuxt et les bundles Workers restent des validations locales, pas un test Cloudflare.
