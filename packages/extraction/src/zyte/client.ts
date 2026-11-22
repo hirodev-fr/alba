@@ -53,7 +53,7 @@ export const createZyteExtractor = (options: ZyteOptions) => {
     try {
       const response = await fetcher("https://api.zyte.com/v1/extract", {
         method: "POST",
-        redirect: "error",
+        redirect: "manual",
         signal,
         headers: {
           "content-type": "application/json",
