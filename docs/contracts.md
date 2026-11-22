@@ -21,7 +21,7 @@ La validation d’URL reste syntaxique. La résolution DNS, les redirections, le
 
 `Offer` associe une URL à un `OfferContext` explicite : attributs de variante (`Record<string, string>`), pays, devise attendue et vendeur. Une variante inconnue se représente par `{}` ; les autres champs inconnus par `null`. Aucun champ n’est déduit silencieusement et aucune canonicalisation ne fusionne des offres. Les règles de comparaison et de mutualisation restent à implémenter dans le métier.
 
-`ExtractedPrice` contient `amount`, `currency`, `availability`, `title` nullable, `observedAt`, `sourceUrl` et la provenance `{ provider: "zyte", mode: "http" | "browser" }`. Il représente le prix normalisé d’une offre, sans structure brute Zyte ni HTML. B05 devra contrôler la correspondance entre requête et résultat (variante, pays, vendeur, devise), ainsi que le caractère exploitable du prix.
+`ExtractedPrice` contient `amount`, `currency`, `availability`, `title` nullable, `observedAt`, `sourceUrl` et la provenance `{ provider: "zyte", mode: "http" | "browser" }`. Il représente le prix normalisé d’une offre, sans structure brute Zyte ni HTML. B05 contrôle la correspondance entre requête et résultat (variante, pays, vendeur, devise), ainsi que le caractère exploitable du prix.
 
 `PriceObservationV1` associe ce prix à `id`, `productId` et `checkId`. `ProductV1` expose l’offre, son titre nullable, sa date de création et `currentObservation` nullable. B04 ajoute les références composites et lit l’observation courante par `observed_at DESC, id DESC`. L’assemblage de la réponse API et l’utilisation dans le Workflow restent à intégrer en B07/B10.
 
@@ -70,7 +70,7 @@ Les champs d’une autre branche sont refusés : une vérification en attente ne
 | `permanent` | `authentication`, `budget_exceeded`, `access_denied`, `unsupported_url`, `invalid_response` | Arrêt ; pas de reprise automatique illimitée. |
 | `business` | `missing_price`, `ambiguous_price`, `context_mismatch`, `currency_mismatch`, `product_not_found` | Résultat explicite sans observation invalide. |
 
-La classification est normalisée par Alba ; le mapping des réponses HTTP et des erreurs Zyte sera réalisé en B05. Un code d’authentification ou de budget ne peut pas être classé temporaire. La validation de structure ne garantit pas l’exactitude du prix extrait. Les messages doivent être rédigés par l’adaptateur, sans corps fournisseur ni credentials.
+La classification est normalisée par Alba ; le mapping des réponses HTTP et des erreurs Zyte est réalisé en B05 (voir [extraction](extraction.md)). Un code d’authentification ou de budget ne peut pas être classé temporaire. La validation de structure ne garantit pas l’exactitude du prix extrait. Les messages doivent être rédigés par l’adaptateur, sans corps fournisseur ni credentials.
 
 ## Utilisation et vérifications
 

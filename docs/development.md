@@ -104,3 +104,7 @@ La présence des workflows ne protège pas les branches : dans **Settings → Ru
 Ne pas confondre l’obligation de passer par une pull request avec une règle qui restreint toutes les mises à jour de branche : cette dernière peut également empêcher les fusions si ses exceptions ne sont pas adaptées. Vérifier les règles effectives et les droits de contournement, y compris pour les administrateurs, avec une pull request de test. Ces réglages sont à appliquer sur GitHub ; ce fichier ne les active pas.
 
 Dependabot ouvre par défaut ses pull requests vers la branche par défaut, actuellement `dev`. Aucun workflow de release ne pousse automatiquement vers les branches protégées ; avant d’en ajouter un, prévoir son mode de publication et ses droits sans contourner involontairement ces protections.
+
+## Extraction B05
+
+`bun run extraction:verify` effectue un appel Zyte réel sur le livre de référence avec `ZYTE_API_KEY` du `.env` local ignoré. Les tests ordinaires restent sans réseau ni clé. Voir [le guide extraction](extraction.md).
