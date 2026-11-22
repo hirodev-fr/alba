@@ -1,0 +1,918 @@
+{
+  "type": "diff",
+  "version": "10",
+  "dialect": "postgres",
+  "id": "b5245c8b-c41b-4040-b3f9-d0559517d7eb",
+  "prevIds": ["d4d24572-d02c-43d6-951a-9052cb01bfda"],
+  "footprints": [
+    {
+      "statementType": "alter_column",
+      "statementTarget": [
+        "column",
+        "public",
+        "account",
+        "access_token_expires_at"
+      ],
+      "writes": [
+        "s|colprop|public.account.access_token_expires_at.type",
+        "s|colprop|public.account.access_token_expires_at.default"
+      ],
+      "reads": [
+        "n|tbl|public.account",
+        "n|sch|public",
+        "n|col|public.account.access_token_expires_at"
+      ],
+      "sqlHash": "1019ed916827fd4f"
+    },
+    {
+      "statementType": "alter_column",
+      "statementTarget": [
+        "column",
+        "public",
+        "account",
+        "refresh_token_expires_at"
+      ],
+      "writes": [
+        "s|colprop|public.account.refresh_token_expires_at.type",
+        "s|colprop|public.account.refresh_token_expires_at.default"
+      ],
+      "reads": [
+        "n|tbl|public.account",
+        "n|sch|public",
+        "n|col|public.account.refresh_token_expires_at"
+      ],
+      "sqlHash": "d4f85d975612e26a"
+    },
+    {
+      "statementType": "alter_column",
+      "statementTarget": ["column", "public", "account", "created_at"],
+      "writes": [
+        "s|colprop|public.account.created_at.type",
+        "s|colprop|public.account.created_at.default"
+      ],
+      "reads": [
+        "n|tbl|public.account",
+        "n|sch|public",
+        "n|col|public.account.created_at"
+      ],
+      "sqlHash": "9dd07d54d7668599"
+    },
+    {
+      "statementType": "alter_column",
+      "statementTarget": ["column", "public", "account", "updated_at"],
+      "writes": [
+        "s|colprop|public.account.updated_at.type",
+        "s|colprop|public.account.updated_at.default"
+      ],
+      "reads": [
+        "n|tbl|public.account",
+        "n|sch|public",
+        "n|col|public.account.updated_at"
+      ],
+      "sqlHash": "dac0c3ba597a1f8e"
+    },
+    {
+      "statementType": "alter_column",
+      "statementTarget": ["column", "public", "session", "expires_at"],
+      "writes": [
+        "s|colprop|public.session.expires_at.type",
+        "s|colprop|public.session.expires_at.default"
+      ],
+      "reads": [
+        "n|tbl|public.session",
+        "n|sch|public",
+        "n|col|public.session.expires_at"
+      ],
+      "sqlHash": "438e7792375bb2c8"
+    },
+    {
+      "statementType": "alter_column",
+      "statementTarget": ["column", "public", "session", "created_at"],
+      "writes": [
+        "s|colprop|public.session.created_at.type",
+        "s|colprop|public.session.created_at.default"
+      ],
+      "reads": [
+        "n|tbl|public.session",
+        "n|sch|public",
+        "n|col|public.session.created_at"
+      ],
+      "sqlHash": "630ea3fc4b93ae97"
+    },
+    {
+      "statementType": "alter_column",
+      "statementTarget": ["column", "public", "session", "updated_at"],
+      "writes": [
+        "s|colprop|public.session.updated_at.type",
+        "s|colprop|public.session.updated_at.default"
+      ],
+      "reads": [
+        "n|tbl|public.session",
+        "n|sch|public",
+        "n|col|public.session.updated_at"
+      ],
+      "sqlHash": "d931598dd4d4a1c1"
+    },
+    {
+      "statementType": "alter_column",
+      "statementTarget": ["column", "public", "user", "created_at"],
+      "writes": [
+        "s|colprop|public.user.created_at.type",
+        "s|colprop|public.user.created_at.default"
+      ],
+      "reads": [
+        "n|tbl|public.user",
+        "n|sch|public",
+        "n|col|public.user.created_at"
+      ],
+      "sqlHash": "6dd2b98b1077ebc3"
+    },
+    {
+      "statementType": "alter_column",
+      "statementTarget": ["column", "public", "user", "updated_at"],
+      "writes": [
+        "s|colprop|public.user.updated_at.type",
+        "s|colprop|public.user.updated_at.default"
+      ],
+      "reads": [
+        "n|tbl|public.user",
+        "n|sch|public",
+        "n|col|public.user.updated_at"
+      ],
+      "sqlHash": "5223c82c20641fcc"
+    },
+    {
+      "statementType": "alter_column",
+      "statementTarget": ["column", "public", "verification", "expires_at"],
+      "writes": [
+        "s|colprop|public.verification.expires_at.type",
+        "s|colprop|public.verification.expires_at.default"
+      ],
+      "reads": [
+        "n|tbl|public.verification",
+        "n|sch|public",
+        "n|col|public.verification.expires_at"
+      ],
+      "sqlHash": "8e6bb63c76695411"
+    },
+    {
+      "statementType": "alter_column",
+      "statementTarget": ["column", "public", "verification", "created_at"],
+      "writes": [
+        "s|colprop|public.verification.created_at.type",
+        "s|colprop|public.verification.created_at.default"
+      ],
+      "reads": [
+        "n|tbl|public.verification",
+        "n|sch|public",
+        "n|col|public.verification.created_at"
+      ],
+      "sqlHash": "381f1f13eccad7f1"
+    },
+    {
+      "statementType": "alter_column",
+      "statementTarget": ["column", "public", "verification", "updated_at"],
+      "writes": [
+        "s|colprop|public.verification.updated_at.type",
+        "s|colprop|public.verification.updated_at.default"
+      ],
+      "reads": [
+        "n|tbl|public.verification",
+        "n|sch|public",
+        "n|col|public.verification.updated_at"
+      ],
+      "sqlHash": "a62b821ffebba40f"
+    },
+    {
+      "statementType": "alter_column",
+      "statementTarget": ["column", "public", "products", "created_at"],
+      "writes": [
+        "s|colprop|public.products.created_at.type",
+        "s|colprop|public.products.created_at.default"
+      ],
+      "reads": [
+        "n|tbl|public.products",
+        "n|sch|public",
+        "n|col|public.products.created_at"
+      ],
+      "sqlHash": "61e23f11021b863b"
+    },
+    {
+      "statementType": "alter_column",
+      "statementTarget": [
+        "column",
+        "public",
+        "product_schedules",
+        "next_check_at"
+      ],
+      "writes": [
+        "s|colprop|public.product_schedules.next_check_at.type",
+        "s|colprop|public.product_schedules.next_check_at.default"
+      ],
+      "reads": [
+        "n|tbl|public.product_schedules",
+        "n|sch|public",
+        "n|col|public.product_schedules.next_check_at"
+      ],
+      "sqlHash": "5b44551e710a601d"
+    },
+    {
+      "statementType": "alter_column",
+      "statementTarget": [
+        "column",
+        "public",
+        "product_schedules",
+        "lease_expires_at"
+      ],
+      "writes": [
+        "s|colprop|public.product_schedules.lease_expires_at.type",
+        "s|colprop|public.product_schedules.lease_expires_at.default"
+      ],
+      "reads": [
+        "n|tbl|public.product_schedules",
+        "n|sch|public",
+        "n|col|public.product_schedules.lease_expires_at"
+      ],
+      "sqlHash": "6023065aec18ba2c"
+    },
+    {
+      "statementType": "alter_column",
+      "statementTarget": ["column", "public", "trackings", "starts_at"],
+      "writes": [
+        "s|colprop|public.trackings.starts_at.type",
+        "s|colprop|public.trackings.starts_at.default"
+      ],
+      "reads": [
+        "n|tbl|public.trackings",
+        "n|sch|public",
+        "n|col|public.trackings.starts_at"
+      ],
+      "sqlHash": "c9c52cfd14bce62a"
+    },
+    {
+      "statementType": "alter_column",
+      "statementTarget": ["column", "public", "trackings", "ends_at"],
+      "writes": [
+        "s|colprop|public.trackings.ends_at.type",
+        "s|colprop|public.trackings.ends_at.default"
+      ],
+      "reads": [
+        "n|tbl|public.trackings",
+        "n|sch|public",
+        "n|col|public.trackings.ends_at"
+      ],
+      "sqlHash": "3987dc38f4808b56"
+    },
+    {
+      "statementType": "alter_column",
+      "statementTarget": ["column", "public", "trackings", "created_at"],
+      "writes": [
+        "s|colprop|public.trackings.created_at.type",
+        "s|colprop|public.trackings.created_at.default"
+      ],
+      "reads": [
+        "n|tbl|public.trackings",
+        "n|sch|public",
+        "n|col|public.trackings.created_at"
+      ],
+      "sqlHash": "9561b6fad99d805a"
+    },
+    {
+      "statementType": "alter_column",
+      "statementTarget": [
+        "column",
+        "public",
+        "extraction_attempts",
+        "started_at"
+      ],
+      "writes": [
+        "s|colprop|public.extraction_attempts.started_at.type",
+        "s|colprop|public.extraction_attempts.started_at.default"
+      ],
+      "reads": [
+        "n|tbl|public.extraction_attempts",
+        "n|sch|public",
+        "n|col|public.extraction_attempts.started_at"
+      ],
+      "sqlHash": "a444e8a057a7f203"
+    },
+    {
+      "statementType": "alter_column",
+      "statementTarget": [
+        "column",
+        "public",
+        "extraction_attempts",
+        "finished_at"
+      ],
+      "writes": [
+        "s|colprop|public.extraction_attempts.finished_at.type",
+        "s|colprop|public.extraction_attempts.finished_at.default"
+      ],
+      "reads": [
+        "n|tbl|public.extraction_attempts",
+        "n|sch|public",
+        "n|col|public.extraction_attempts.finished_at"
+      ],
+      "sqlHash": "016c3d4d3a8e7c20"
+    },
+    {
+      "statementType": "alter_column",
+      "statementTarget": ["column", "public", "price_checks", "scheduled_at"],
+      "writes": [
+        "s|colprop|public.price_checks.scheduled_at.type",
+        "s|colprop|public.price_checks.scheduled_at.default"
+      ],
+      "reads": [
+        "n|tbl|public.price_checks",
+        "n|sch|public",
+        "n|col|public.price_checks.scheduled_at"
+      ],
+      "sqlHash": "7a090555c22c10b0"
+    },
+    {
+      "statementType": "alter_column",
+      "statementTarget": ["column", "public", "price_checks", "started_at"],
+      "writes": [
+        "s|colprop|public.price_checks.started_at.type",
+        "s|colprop|public.price_checks.started_at.default"
+      ],
+      "reads": [
+        "n|tbl|public.price_checks",
+        "n|sch|public",
+        "n|col|public.price_checks.started_at"
+      ],
+      "sqlHash": "aaab9d79ae3adf5b"
+    },
+    {
+      "statementType": "alter_column",
+      "statementTarget": ["column", "public", "price_checks", "finished_at"],
+      "writes": [
+        "s|colprop|public.price_checks.finished_at.type",
+        "s|colprop|public.price_checks.finished_at.default"
+      ],
+      "reads": [
+        "n|tbl|public.price_checks",
+        "n|sch|public",
+        "n|col|public.price_checks.finished_at"
+      ],
+      "sqlHash": "13e62d4f99b52da7"
+    },
+    {
+      "statementType": "alter_column",
+      "statementTarget": ["column", "public", "price_checks", "created_at"],
+      "writes": [
+        "s|colprop|public.price_checks.created_at.type",
+        "s|colprop|public.price_checks.created_at.default"
+      ],
+      "reads": [
+        "n|tbl|public.price_checks",
+        "n|sch|public",
+        "n|col|public.price_checks.created_at"
+      ],
+      "sqlHash": "8c9e163fb61a058f"
+    },
+    {
+      "statementType": "alter_column",
+      "statementTarget": [
+        "column",
+        "public",
+        "price_observations",
+        "observed_at"
+      ],
+      "writes": [
+        "s|colprop|public.price_observations.observed_at.type",
+        "s|colprop|public.price_observations.observed_at.default"
+      ],
+      "reads": [
+        "n|tbl|public.price_observations",
+        "n|sch|public",
+        "n|col|public.price_observations.observed_at"
+      ],
+      "sqlHash": "823919e2c35967b0"
+    },
+    {
+      "statementType": "alter_column",
+      "statementTarget": [
+        "column",
+        "public",
+        "price_observations",
+        "created_at"
+      ],
+      "writes": [
+        "s|colprop|public.price_observations.created_at.type",
+        "s|colprop|public.price_observations.created_at.default"
+      ],
+      "reads": [
+        "n|tbl|public.price_observations",
+        "n|sch|public",
+        "n|col|public.price_observations.created_at"
+      ],
+      "sqlHash": "21fe7a3003e3ad2e"
+    },
+    {
+      "statementType": "alter_check",
+      "statementTarget": ["table", "public", "products"],
+      "writes": ["s|ck|public.products.products_identity_key_check"],
+      "reads": [
+        "n|tbl|public.products",
+        "n|sch|public",
+        "n|col|public.products.identity_key",
+        "e|col|public.products.identity_key"
+      ],
+      "sqlHash": "c177ebcd456860d6"
+    },
+    {
+      "statementType": "alter_check",
+      "statementTarget": ["table", "public", "products"],
+      "writes": ["s|ck|public.products.products_url_length_check"],
+      "reads": [
+        "n|tbl|public.products",
+        "n|sch|public",
+        "n|col|public.products.url",
+        "e|col|public.products.url"
+      ],
+      "sqlHash": "73b99b59b6fc068b"
+    },
+    {
+      "statementType": "alter_check",
+      "statementTarget": ["table", "public", "products"],
+      "writes": ["s|ck|public.products.products_context_check"],
+      "reads": [
+        "n|tbl|public.products",
+        "n|sch|public",
+        "n|col|public.products.context",
+        "e|col|public.products.context"
+      ],
+      "sqlHash": "f846115ef9f7dc11"
+    },
+    {
+      "statementType": "alter_check",
+      "statementTarget": ["table", "public", "product_schedules"],
+      "writes": [
+        "s|ck|public.product_schedules.product_schedules_interval_check"
+      ],
+      "reads": [
+        "n|tbl|public.product_schedules",
+        "n|sch|public",
+        "n|col|public.product_schedules.interval_seconds",
+        "e|col|public.product_schedules.interval_seconds"
+      ],
+      "sqlHash": "42efcb358bcb1042"
+    },
+    {
+      "statementType": "alter_check",
+      "statementTarget": ["table", "public", "product_schedules"],
+      "writes": ["s|ck|public.product_schedules.product_schedules_lease_check"],
+      "reads": [
+        "n|tbl|public.product_schedules",
+        "n|sch|public",
+        "n|col|public.product_schedules.lease_token",
+        "n|col|public.product_schedules.lease_expires_at",
+        "e|col|public.product_schedules.lease_token",
+        "e|col|public.product_schedules.lease_expires_at"
+      ],
+      "sqlHash": "8ad82fd7fcb1b975"
+    },
+    {
+      "statementType": "alter_check",
+      "statementTarget": ["table", "public", "trackings"],
+      "writes": ["s|ck|public.trackings.trackings_interval_check"],
+      "reads": [
+        "n|tbl|public.trackings",
+        "n|sch|public",
+        "n|col|public.trackings.interval_seconds",
+        "e|col|public.trackings.interval_seconds"
+      ],
+      "sqlHash": "916d3fb087b61a71"
+    },
+    {
+      "statementType": "alter_check",
+      "statementTarget": ["table", "public", "trackings"],
+      "writes": ["s|ck|public.trackings.trackings_period_check"],
+      "reads": [
+        "n|tbl|public.trackings",
+        "n|sch|public",
+        "n|col|public.trackings.ends_at",
+        "n|col|public.trackings.starts_at",
+        "e|col|public.trackings.ends_at",
+        "e|col|public.trackings.starts_at"
+      ],
+      "sqlHash": "3cf8480ff7ba5e29"
+    },
+    {
+      "statementType": "alter_check",
+      "statementTarget": ["table", "public", "extraction_attempts"],
+      "writes": [
+        "s|ck|public.extraction_attempts.extraction_attempts_number_check"
+      ],
+      "reads": [
+        "n|tbl|public.extraction_attempts",
+        "n|sch|public",
+        "n|col|public.extraction_attempts.attempt_number",
+        "e|col|public.extraction_attempts.attempt_number"
+      ],
+      "sqlHash": "572d33e777caae15"
+    },
+    {
+      "statementType": "alter_check",
+      "statementTarget": ["table", "public", "extraction_attempts"],
+      "writes": [
+        "s|ck|public.extraction_attempts.extraction_attempts_provider_check"
+      ],
+      "reads": [
+        "n|tbl|public.extraction_attempts",
+        "n|sch|public",
+        "n|col|public.extraction_attempts.provider",
+        "e|col|public.extraction_attempts.provider"
+      ],
+      "sqlHash": "981ad7190223e693"
+    },
+    {
+      "statementType": "alter_check",
+      "statementTarget": ["table", "public", "extraction_attempts"],
+      "writes": [
+        "s|ck|public.extraction_attempts.extraction_attempts_duration_check"
+      ],
+      "reads": [
+        "n|tbl|public.extraction_attempts",
+        "n|sch|public",
+        "n|col|public.extraction_attempts.duration_ms",
+        "e|col|public.extraction_attempts.duration_ms"
+      ],
+      "sqlHash": "1686538e7d01f390"
+    },
+    {
+      "statementType": "alter_check",
+      "statementTarget": ["table", "public", "extraction_attempts"],
+      "writes": [
+        "s|ck|public.extraction_attempts.extraction_attempts_state_check"
+      ],
+      "reads": [
+        "n|tbl|public.extraction_attempts",
+        "n|sch|public",
+        "n|col|public.extraction_attempts.status",
+        "n|col|public.extraction_attempts.finished_at",
+        "n|col|public.extraction_attempts.duration_ms",
+        "n|col|public.extraction_attempts.result",
+        "e|col|public.extraction_attempts.status",
+        "e|col|public.extraction_attempts.finished_at",
+        "e|col|public.extraction_attempts.duration_ms",
+        "e|col|public.extraction_attempts.result"
+      ],
+      "sqlHash": "33f358f0534a591e"
+    },
+    {
+      "statementType": "alter_check",
+      "statementTarget": ["table", "public", "price_checks"],
+      "writes": ["s|ck|public.price_checks.price_checks_state_check"],
+      "reads": [
+        "n|tbl|public.price_checks",
+        "n|sch|public",
+        "n|col|public.price_checks.status",
+        "n|col|public.price_checks.started_at",
+        "n|col|public.price_checks.finished_at",
+        "n|col|public.price_checks.observation_id",
+        "n|col|public.price_checks.error",
+        "n|col|public.price_checks.workflow_id",
+        "e|col|public.price_checks.status",
+        "e|col|public.price_checks.started_at",
+        "e|col|public.price_checks.finished_at",
+        "e|col|public.price_checks.observation_id",
+        "e|col|public.price_checks.error",
+        "e|col|public.price_checks.workflow_id"
+      ],
+      "sqlHash": "c10051493a94399c"
+    },
+    {
+      "statementType": "alter_check",
+      "statementTarget": ["table", "public", "price_observations"],
+      "writes": [
+        "s|ck|public.price_observations.price_observations_amount_check"
+      ],
+      "reads": [
+        "n|tbl|public.price_observations",
+        "n|sch|public",
+        "n|col|public.price_observations.amount",
+        "e|col|public.price_observations.amount"
+      ],
+      "sqlHash": "775fa46decae20db"
+    },
+    {
+      "statementType": "alter_check",
+      "statementTarget": ["table", "public", "price_observations"],
+      "writes": [
+        "s|ck|public.price_observations.price_observations_currency_check"
+      ],
+      "reads": [
+        "n|tbl|public.price_observations",
+        "n|sch|public",
+        "n|col|public.price_observations.currency",
+        "e|col|public.price_observations.currency"
+      ],
+      "sqlHash": "56401063981e3bc7"
+    },
+    {
+      "statementType": "alter_check",
+      "statementTarget": ["table", "public", "price_observations"],
+      "writes": [
+        "s|ck|public.price_observations.price_observations_provider_check"
+      ],
+      "reads": [
+        "n|tbl|public.price_observations",
+        "n|sch|public",
+        "n|col|public.price_observations.provider",
+        "e|col|public.price_observations.provider"
+      ],
+      "sqlHash": "db3971bfbdba6597"
+    }
+  ],
+  "deltas": [
+    {
+      "op": "alter",
+      "key": "columns\u0000[\"public\",\"account\",\"access_token_expires_at\"]",
+      "set": {
+        "type": "timestamp(3) with time zone"
+      }
+    },
+    {
+      "op": "alter",
+      "key": "columns\u0000[\"public\",\"account\",\"refresh_token_expires_at\"]",
+      "set": {
+        "type": "timestamp(3) with time zone"
+      }
+    },
+    {
+      "op": "alter",
+      "key": "columns\u0000[\"public\",\"account\",\"created_at\"]",
+      "set": {
+        "type": "timestamp(3) with time zone"
+      }
+    },
+    {
+      "op": "alter",
+      "key": "columns\u0000[\"public\",\"account\",\"updated_at\"]",
+      "set": {
+        "type": "timestamp(3) with time zone"
+      }
+    },
+    {
+      "op": "alter",
+      "key": "columns\u0000[\"public\",\"session\",\"expires_at\"]",
+      "set": {
+        "type": "timestamp(3) with time zone"
+      }
+    },
+    {
+      "op": "alter",
+      "key": "columns\u0000[\"public\",\"session\",\"created_at\"]",
+      "set": {
+        "type": "timestamp(3) with time zone"
+      }
+    },
+    {
+      "op": "alter",
+      "key": "columns\u0000[\"public\",\"session\",\"updated_at\"]",
+      "set": {
+        "type": "timestamp(3) with time zone"
+      }
+    },
+    {
+      "op": "alter",
+      "key": "columns\u0000[\"public\",\"user\",\"created_at\"]",
+      "set": {
+        "type": "timestamp(3) with time zone"
+      }
+    },
+    {
+      "op": "alter",
+      "key": "columns\u0000[\"public\",\"user\",\"updated_at\"]",
+      "set": {
+        "type": "timestamp(3) with time zone"
+      }
+    },
+    {
+      "op": "alter",
+      "key": "columns\u0000[\"public\",\"verification\",\"expires_at\"]",
+      "set": {
+        "type": "timestamp(3) with time zone"
+      }
+    },
+    {
+      "op": "alter",
+      "key": "columns\u0000[\"public\",\"verification\",\"created_at\"]",
+      "set": {
+        "type": "timestamp(3) with time zone"
+      }
+    },
+    {
+      "op": "alter",
+      "key": "columns\u0000[\"public\",\"verification\",\"updated_at\"]",
+      "set": {
+        "type": "timestamp(3) with time zone"
+      }
+    },
+    {
+      "op": "alter",
+      "key": "columns\u0000[\"public\",\"products\",\"created_at\"]",
+      "set": {
+        "type": "timestamp(3) with time zone"
+      }
+    },
+    {
+      "op": "alter",
+      "key": "columns\u0000[\"public\",\"product_schedules\",\"next_check_at\"]",
+      "set": {
+        "type": "timestamp(3) with time zone"
+      }
+    },
+    {
+      "op": "alter",
+      "key": "columns\u0000[\"public\",\"product_schedules\",\"lease_expires_at\"]",
+      "set": {
+        "type": "timestamp(3) with time zone"
+      }
+    },
+    {
+      "op": "alter",
+      "key": "columns\u0000[\"public\",\"trackings\",\"starts_at\"]",
+      "set": {
+        "type": "timestamp(3) with time zone"
+      }
+    },
+    {
+      "op": "alter",
+      "key": "columns\u0000[\"public\",\"trackings\",\"ends_at\"]",
+      "set": {
+        "type": "timestamp(3) with time zone"
+      }
+    },
+    {
+      "op": "alter",
+      "key": "columns\u0000[\"public\",\"trackings\",\"created_at\"]",
+      "set": {
+        "type": "timestamp(3) with time zone"
+      }
+    },
+    {
+      "op": "alter",
+      "key": "columns\u0000[\"public\",\"extraction_attempts\",\"started_at\"]",
+      "set": {
+        "type": "timestamp(3) with time zone"
+      }
+    },
+    {
+      "op": "alter",
+      "key": "columns\u0000[\"public\",\"extraction_attempts\",\"finished_at\"]",
+      "set": {
+        "type": "timestamp(3) with time zone"
+      }
+    },
+    {
+      "op": "alter",
+      "key": "columns\u0000[\"public\",\"price_checks\",\"scheduled_at\"]",
+      "set": {
+        "type": "timestamp(3) with time zone"
+      }
+    },
+    {
+      "op": "alter",
+      "key": "columns\u0000[\"public\",\"price_checks\",\"started_at\"]",
+      "set": {
+        "type": "timestamp(3) with time zone"
+      }
+    },
+    {
+      "op": "alter",
+      "key": "columns\u0000[\"public\",\"price_checks\",\"finished_at\"]",
+      "set": {
+        "type": "timestamp(3) with time zone"
+      }
+    },
+    {
+      "op": "alter",
+      "key": "columns\u0000[\"public\",\"price_checks\",\"created_at\"]",
+      "set": {
+        "type": "timestamp(3) with time zone"
+      }
+    },
+    {
+      "op": "alter",
+      "key": "columns\u0000[\"public\",\"price_observations\",\"observed_at\"]",
+      "set": {
+        "type": "timestamp(3) with time zone"
+      }
+    },
+    {
+      "op": "alter",
+      "key": "columns\u0000[\"public\",\"price_observations\",\"created_at\"]",
+      "set": {
+        "type": "timestamp(3) with time zone"
+      }
+    },
+    {
+      "op": "alter",
+      "key": "checks\u0000[\"public\",\"products\",\"products_identity_key_check\"]",
+      "set": {
+        "value": "\"identity_key\" ~ '^[0-9a-f]{64}$'"
+      }
+    },
+    {
+      "op": "alter",
+      "key": "checks\u0000[\"public\",\"products\",\"products_url_length_check\"]",
+      "set": {
+        "value": "length(\"url\") between 1 and 4096"
+      }
+    },
+    {
+      "op": "alter",
+      "key": "checks\u0000[\"public\",\"products\",\"products_context_check\"]",
+      "set": {
+        "value": "jsonb_typeof(\"context\") = 'object'"
+      }
+    },
+    {
+      "op": "alter",
+      "key": "checks\u0000[\"public\",\"product_schedules\",\"product_schedules_interval_check\"]",
+      "set": {
+        "value": "\"interval_seconds\" between 60 and 31536000"
+      }
+    },
+    {
+      "op": "alter",
+      "key": "checks\u0000[\"public\",\"product_schedules\",\"product_schedules_lease_check\"]",
+      "set": {
+        "value": "(\"lease_token\" is null) = (\"lease_expires_at\" is null)"
+      }
+    },
+    {
+      "op": "alter",
+      "key": "checks\u0000[\"public\",\"trackings\",\"trackings_interval_check\"]",
+      "set": {
+        "value": "\"interval_seconds\" between 60 and 31536000"
+      }
+    },
+    {
+      "op": "alter",
+      "key": "checks\u0000[\"public\",\"trackings\",\"trackings_period_check\"]",
+      "set": {
+        "value": "\"ends_at\" > \"starts_at\""
+      }
+    },
+    {
+      "op": "alter",
+      "key": "checks\u0000[\"public\",\"extraction_attempts\",\"extraction_attempts_number_check\"]",
+      "set": {
+        "value": "\"attempt_number\" > 0"
+      }
+    },
+    {
+      "op": "alter",
+      "key": "checks\u0000[\"public\",\"extraction_attempts\",\"extraction_attempts_provider_check\"]",
+      "set": {
+        "value": "\"provider\" = 'zyte'"
+      }
+    },
+    {
+      "op": "alter",
+      "key": "checks\u0000[\"public\",\"extraction_attempts\",\"extraction_attempts_duration_check\"]",
+      "set": {
+        "value": "\"duration_ms\" >= 0"
+      }
+    },
+    {
+      "op": "alter",
+      "key": "checks\u0000[\"public\",\"extraction_attempts\",\"extraction_attempts_state_check\"]",
+      "set": {
+        "value": "\n    (\"status\" = 'running' and \"finished_at\" is null and \"duration_ms\" is null and \"result\" is null)\n    or (\"status\" in ('succeeded', 'failed') and \"finished_at\" is not null and \"duration_ms\" is not null and \"result\" is not null\n      and (\"result\"->>'version') = '1'\n      and ((\"status\" = 'succeeded' and \"result\"->>'status' = 'success') or (\"status\" = 'failed' and \"result\"->>'status' = 'error')))\n  "
+      }
+    },
+    {
+      "op": "alter",
+      "key": "checks\u0000[\"public\",\"price_checks\",\"price_checks_state_check\"]",
+      "set": {
+        "value": "\n    (\"status\" = 'pending' and \"started_at\" is null and \"finished_at\" is null and \"observation_id\" is null and \"error\" is null)\n    or (\"status\" = 'running' and \"workflow_id\" is not null and \"started_at\" is not null and \"finished_at\" is null and \"observation_id\" is null and \"error\" is null)\n    or (\"status\" = 'succeeded' and \"finished_at\" is not null and \"observation_id\" is not null and \"error\" is null)\n    or (\"status\" = 'failed' and \"finished_at\" is not null and \"observation_id\" is null and \"error\" is not null)\n    or (\"status\" = 'cancelled' and \"finished_at\" is not null and \"observation_id\" is null and \"error\" is null)\n  "
+      }
+    },
+    {
+      "op": "alter",
+      "key": "checks\u0000[\"public\",\"price_observations\",\"price_observations_amount_check\"]",
+      "set": {
+        "value": "\"amount\"::text ~ '^(0|[1-9][0-9]*)([.][0-9]+)?$'"
+      }
+    },
+    {
+      "op": "alter",
+      "key": "checks\u0000[\"public\",\"price_observations\",\"price_observations_currency_check\"]",
+      "set": {
+        "value": "\"currency\" ~ '^[A-Z]{3}$'"
+      }
+    },
+    {
+      "op": "alter",
+      "key": "checks\u0000[\"public\",\"price_observations\",\"price_observations_provider_check\"]",
+      "set": {
+        "value": "\"provider\" = 'zyte'"
+      }
+    }
+  ]
+}
