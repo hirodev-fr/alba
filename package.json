@@ -10,6 +10,7 @@
     "infra:plan": "alchemy plan --stage dev",
     "infra:deploy": "alchemy deploy --stage dev",
     "infra:dev": "alchemy dev --stage dev",
+    "build:cloudflare": "bun run --cwd apps/web build:cloudflare",
     "build": "turbo run build",
     "typecheck": "tsc --noEmit && turbo run typecheck",
     "test": "turbo run test",
