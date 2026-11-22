@@ -60,7 +60,7 @@ Ultracite 8 utilise les configurations racine `oxlint.config.mts` et `oxfmt.conf
 
 ## Environnement et secrets
 
-`check`, `typecheck`, `test` et `build` fonctionnent sans fichier `.env`. `alchemy dev` utilise les profils Cloudflare/Neon, ou les credentials de provisionnement serveur décrits dans [`.env.example`](../.env.example). Alchemy injecte la connexion Neon en secret dans API et Workflows. Pour `db:test`, configurer `DATABASE_URL` dans le `.env` racine après provisionnement du projet personnel. Better Auth reste une variable prévue ; les clés Zyte servent aux commandes explicites B05/B06, sans binding Workflow à ce stade. Ne pas les renseigner dans du code destiné au navigateur ni versionner leurs valeurs. `.env`, ses variantes et les fichiers `.dev.vars` sont ignorés par Git.
+`check`, `typecheck`, `test` et `build` fonctionnent sans fichier `.env`. `alchemy dev` utilise les profils Cloudflare/Neon, ou les credentials de provisionnement serveur décrits dans [`.env.example`](../.env.example). Alchemy injecte la connexion Neon en secret dans API et Workflows. Pour `db:test`, configurer `DATABASE_URL` dans le `.env` racine après provisionnement du projet personnel. Better Auth reste une variable prévue ; les clés Zyte servent aux commandes explicites B05/B06, avec binding secret Workflow depuis B07. Ne pas les renseigner dans du code destiné au navigateur ni versionner leurs valeurs. `.env`, ses variantes et les fichiers `.dev.vars` sont ignorés par Git.
 
 Ne pas considérer ces noms ou exemples comme une configuration de production complète : les bindings sont déclarés par Alchemy ; la validation et l’utilisation des variables métier dans les points d’entrée applicatifs restent à intégrer.
 
@@ -116,3 +116,7 @@ Dependabot ouvre par défaut ses pull requests vers la branche par défaut, actu
 ## Workflow B07
 
 `bun run test` inclut les tests de reprise du Workflow et du déclencheur opérateur sans réseau. `bun run db:test` exécute 10 tests Neon, dont gel du contexte et replay après panne SQL réelle. `bun run infra:verify <webUrl>` vérifie désormais uniquement HTTP/oRPC ; l'ancien lancement du squelette est remplacé par `bun run workflow:verify <webUrl> --live`, qui déclenche via le binding API et persiste une extraction réelle. L'option `--sql-failure` vérifie une reprise SQL dans le runtime avec un trigger temporaire ciblé. Configuration, dépenses et preuves : [guide B07](workflows.md).
+
+## Dispatcher B08
+
+`DISPATCH_ENABLED=true` active le cron Alchemy chaque minute. Pour le contrôle local sans dépense, lancer `DISPATCH_ENABLED=true EXTRACTION_ENABLED=false bun run infra:dev`, puis `bun run dispatcher:verify <url-api-locale>`. La connexion `DATABASE_URL` doit désigner la même base que le stage actif. Les tests SQL B08 sont inclus dans `db:test` ; les tests de démarrage et de reprise sans réseau sont inclus dans `test`. Voir [garanties, fréquence et limites](dispatcher.md).

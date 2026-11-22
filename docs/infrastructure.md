@@ -64,3 +64,7 @@ Le déclenchement de cette instance utilise l’API de gestion Cloudflare. Le bi
 ## Intégration B07
 
 Le 22 novembre 2026, Alchemy dev a assemblé les bindings B07 sur `dev_raphael`, avec Neon distant existant. Nuxt → API → Workflow local → Zyte → Neon est vérifié, ainsi que la reprise automatique d'une finalisation après panne SQL injectée. Aucun nouveau déploiement cloud `dev` : les preuves B02 ci-dessus restent historiques et ne prouvent pas B07 distant. Les secrets Zyte/opérateur restent serveur ; dépenses désactivées et liste d'hôtes vide par défaut. Voir [les preuves détaillées](workflows.md).
+
+## Dispatcher B08
+
+La propriété `crons` du Worker API déclare `* * * * *` si `DISPATCH_ENABLED=true`, sinon `[]`. Le binding serveur porte le même interrupteur. Aucun cron cloud B08 n’a été déployé. Voir [configuration et preuves locales](dispatcher.md).

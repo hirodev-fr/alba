@@ -1,6 +1,6 @@
 # Première vérification durable — B07
 
-Le Workflow consomme `{ version: 1, checkId }`, avec un identifiant d’instance **égal au `checkId`**. La vérification doit déjà exister dans Neon. B07 fournit un déclencheur opérateur protégé ; la création des suivis, le dispatcher et la réconciliation restent en B08–B11.
+Le Workflow consomme `{ version: 1, checkId }`, avec un identifiant d’instance **égal au `checkId`**. La vérification doit déjà exister dans Neon. B07 fournit un déclencheur opérateur protégé ; le dispatcher est implémenté en [B08](dispatcher.md), la création des suivis et la réconciliation restent en B09–B11.
 
 ## Étapes et garanties
 
@@ -23,7 +23,7 @@ Alchemy beta.87 injecte `DATABASE_URL` et `ZYTE_API_KEY` uniquement côté serve
 - `POST /internal/checks/start`, corps `{ "version": 1, "checkId": "..." }`, appelle le binding `PRICE_CHECK.create` avec l’ID déterministe ;
 - `GET /internal/checks/:id` appelle `PRICE_CHECK.get().status()`.
 
-Via Nuxt, préfixer `/api`. Ce déclencheur sert à la validation explicite, pas à des utilisateurs finaux. Ne jamais intégrer le secret dans l’interface. Il ne crée ni produit ni vérification ; le script opérateur les crée en base. Un démarrage incertain doit être inspecté avec le même identifiant ; B08/B09 fourniront la récupération automatique.
+Via Nuxt, préfixer `/api`. Ce déclencheur sert à la validation explicite, pas à des utilisateurs finaux. Ne jamais intégrer le secret dans l’interface. Il ne crée ni produit ni vérification ; le script opérateur les crée en base. Un démarrage incertain doit être inspecté avec le même identifiant ; B08 récupère automatiquement les démarrages non acquittés du dispatcher ; B09 traitera les instances échouées.
 
 ## Vérification reproductible
 

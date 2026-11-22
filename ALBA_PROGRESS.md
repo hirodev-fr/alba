@@ -1,11 +1,11 @@
 # Alba — État du projet et suivi d’avancement
 
 > **Mise à jour :** 22 novembre 2026  
-> **Phase :** B07 réalisé en runtime local Alchemy avec Zyte/Neon réels ; infrastructure cloud dev encore B02
+> **Phase :** B08 implémenté et vérifié avec cron/Workflow locaux et Neon réel ; infrastructure cloud dev encore B02
 >
-> **Statut général :** monorepo compilé et testé ; extraction durable B07, idempotence et reprise SQL vérifiées sur le stage personnel ; aucun déploiement distant B07
+> **Statut général :** extraction durable B07 et dispatcher B08 vérifiés sur le stage personnel ; aucun déploiement distant B07/B08
 >
-> **Objectif immédiat :** B08, dispatcher des échéances, après validation B07 en runtime local avec Zyte et Neon réels.
+> **Objectif immédiat :** B09, réconciliation des instances échouées et contrôles bloqués après démarrage.
 
 ## 1. Présentation du projet
 
@@ -114,7 +114,7 @@ Une instance de Workflow est une exécution durable, et non un nouveau Worker à
 | Qualité | Ultracite, Oxlint, Oxfmt |
 | Tests | Bun test pour l’API, les contrats et les opérations SQL B04 ; Vitest et Playwright envisagés pour les prochaines intégrations et le parcours principal |
 
-Le driver HTTP impose des requêtes SQL ou des transactions non interactives adaptées. B04 valide `db.batch` pour la finalisation sur Neon réel ; les réservations restent à implémenter en B08. Les besoins de Better Auth restent à vérifier ; employer un transport WebSocket si des transactions interactives deviennent nécessaires. Hyperdrive n’est pas requis par le plan initial.
+Le driver HTTP impose des requêtes SQL ou des transactions non interactives adaptées. B04 valide `db.batch` pour la finalisation sur Neon réel ; les réservations atomiques sont implémentées et testées en B08. Les besoins de Better Auth restent à vérifier ; employer un transport WebSocket si des transactions interactives deviennent nécessaires. Hyperdrive n’est pas requis par le plan initial.
 
 ## 5. Structure cible du monorepo
 
@@ -263,7 +263,7 @@ alba/
 
 **Disponibilité cible :** `in_stock`, `out_of_stock`, `unknown`.
 
-**Mutualisation :** même offre et même contexte → une observation partageable entre suivis autorisés. Deux variantes, vendeurs ou pays différents ne doivent pas être fusionnés par une canonicalisation excessive. La fréquence effective satisfait le suivi actif le plus exigeant ; la règle exacte d’alignement des échéances reste à finaliser.
+**Mutualisation :** même offre et même contexte → une observation partageable entre suivis autorisés. Deux variantes, vendeurs ou pays différents ne doivent pas être fusionnés par une canonicalisation excessive. La fréquence effective satisfait le suivi actif le plus exigeant ; B08 repart de l’acquittement avec la fréquence active minimale, sans rafale de rattrapage ; voir docs/dispatcher.md.
 
 ### Contrats B03 implémentés
 
@@ -325,7 +325,7 @@ La base conserve la trace du travail à distribuer : une panne entre écriture S
 | `alba-api` | API interne et futur cron | Déployé sur dev, sans cron |
 | `alba-workflows` | Worker hébergeant le workflow | Déployé sur dev, sans URL publique |
 | `alba-price-check` | Définition du Workflow | Squelette déployé sur dev |
-| Cron API | Dispatcher et réconciliation | À configurer |
+| Cron API | Dispatcher et réconciliation | Dispatcher B08 implémenté, activation explicite ; réconciliation B09 restante ; aucun déploiement cloud B08 |
 | Projet / branche Neon | PostgreSQL | B04 : projet personnel distant provisionné et migré par alchemy dev ; tests HTTP Neon passants |
 | Binding Web → API | Communication interne | Vérifié sur dev : HTTP et oRPC |
 | Binding API → Workflow | Création et consultation d’instances | Vérifié avec Alchemy local en B07 ; pas de déploiement B07 distant |
@@ -391,7 +391,7 @@ Les identifiants **Bxx** remplacent le plan Axx de l’ancienne architecture Pyt
 | B05 | Adaptateur Zyte | Extraction HTTP réelle normalisée ; erreurs classées | Réalisé : client HTTP, mapping et erreurs classées ; 24 tests simulés et extraction Zyte réelle à 51.77 GBP vérifiés (voir docs/extraction.md) |
 | B06 | Benchmark extraction | Échantillon représentatif, exactitude et coût mesurés | Réalisé : 12 cas réels/contrôle, 8/11 réponses conformes aux références, 6 observations ; coût Stats mesuré 0,006733 USD ; limites documentées dans docs/extraction-benchmark.md |
 | B07 | Première vérification durable | Extraction réelle persistée ; finalisation répétée sans doublon ; erreurs temporaires, définitives et métier distinguées ; reprise après panne SQL sans rejouer une extraction déjà durablement enregistrée | Réalisé en runtime local Alchemy avec Zyte/Neon réels : 51.77 GBP, une observation, finalisations répétées et panne SQL injectée ; tests ciblés passants. Aucun déploiement B07 distant ; voir docs/workflows.md |
-| B08 | Dispatcher | Échéances réservées et workflows démarrés sans perte de tâche | Non commencé |
+| B08 | Dispatcher | Échéances réservées et workflows démarrés sans perte de tâche | Réalisé : six tests B08 sur Neon réel ; cron → binding Workflow → Neon vérifié en runtime local sans dépense Zyte, second passage sans doublon ; voir docs/dispatcher.md |
 | B09 | Réconciliation | Échecs et démarrages incertains récupérables | Non commencé |
 | B10 | API métier | Création/gestion des suivis, historique et contrôles de propriété | Non commencé |
 | B11 | Authentification | Connexion et sessions opérationnelles sur l’origine publique | Non commencé |
@@ -453,7 +453,7 @@ La validation couvre également :
 - le recours navigateur seulement lorsqu’il est autorisé ;
 - les migrations, secrets et environnements isolés.
 
-**Prochaine action :** B08, réserver atomiquement les échéances et démarrer les instances avec leur identifiant déterministe sans perte de tâche. B07 fournit le parcours opérateur durable ; le déploiement cloud B07 reste à effectuer, sans confondre ses tests locaux avec une validation du service distant.
+**Prochaine action :** B09, réconcilier les instances échouées et les contrôles bloqués après démarrage. B07 fournit le parcours opérateur durable ; le déploiement cloud B07 reste à effectuer, sans confondre ses tests locaux avec une validation du service distant.
 
 ## 13. Références techniques
 
@@ -486,7 +486,7 @@ Le 22 novembre 2026, le stage personnel `dev_raphael` a exécuté le parcours Nu
 
 Les étapes fournisseur et SQL sont séparées ; le résultat compact est enregistré durablement avant toute écriture métier suivante. Erreurs temporaires : trois tentatives au maximum, attentes de 10 et 20 secondes. Erreurs permanentes ou métier : finalisation immédiate sans observation invalide. SQL : cinq retries exponentiels à partir de deux secondes. Les tests ciblés couvrent ces décisions et le replay ; 10 tests Neon vérifient aussi l’atomicité et le contexte figé. Le runtime local a révélé et permis de corriger le mode Fetch `redirect: "error"`, incompatible Workers.
 
-Le déclencheur opérateur exige un secret ; l’extraction est désactivée par défaut et exige une liste d’hôtes autorisés. Les quotas globaux, le dispatcher, la réconciliation et l’API utilisateur restent aux étapes suivantes. **Aucun déploiement B07 distant n’a été effectué** : le stage cloud `dev` conserve le squelette B02.
+Le déclencheur opérateur exige un secret ; l’extraction est désactivée par défaut et exige une liste d’hôtes autorisés. Le dispatcher est désormais implémenté en B08. Les quotas globaux, la réconciliation et l’API utilisateur restent aux étapes suivantes. **Aucun déploiement B07 distant n’a été effectué** : le stage cloud `dev` conserve le squelette B02.
 
 ### Documentation du dépôt
 
@@ -499,3 +499,7 @@ Les workflows versionnés exécutent les contrôles locaux et CodeQL ; Dependabo
 ### Flux Git protégé
 
 Le flux par branches de travail et pull requests vers `dev` et `main`, ainsi que les réglages GitHub recommandés, sont documentés dans le [guide de développement](docs/development.md). La protection des branches reste à configurer et à vérifier sur GitHub ; la branche distante `main` n’a pas été constatée lors de cet examen.
+
+### Livrable B08 — dispatcher
+
+Le Worker API réserve les échéances par lots atomiques avec `FOR UPDATE SKIP LOCKED`, conserve le `PriceCheck` avant tout démarrage et utilise son identifiant pour le Workflow. Les baux de deux minutes sont récupérables ; un acquittement obsolète ne peut pas avancer la planification. La fréquence mutualisée, les reprises, les tests et les limites B09/B13 sont décrits dans [docs/dispatcher.md](docs/dispatcher.md). Aucun déploiement distant B08.
