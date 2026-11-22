@@ -1,9 +1,9 @@
 # Alba — État du projet et suivi d’avancement
 
 > **Mise à jour :** 22 novembre 2026  
-> **Phase :** fondations locales initialisées ; intégrations cloud à valider  
-> **Statut général :** monorepo local compilé et testé ; aucune ressource cloud déployée  
-> **Objectif immédiat :** valider les bindings et réaliser une première boucle de suivi avec Zyte, Cloudflare Workflows et Neon.
+> **Phase :** infrastructure B02 déployée sur le stage dev ; intégrations métier à réaliser  
+> **Statut général :** monorepo compilé et testé ; trois Workers et un Workflow déployés sur dev  
+> **Objectif immédiat :** implémenter les contrats B03, puis Neon et Zyte pour la première vérification durable.
 
 ## 1. Présentation du projet
 
@@ -319,14 +319,14 @@ La base conserve la trace du travail à distribuer : une panne entre écriture S
 
 | Ressource logique | Rôle | État |
 | --- | --- | --- |
-| `alba-web` | Nuxt et transmission API | À créer |
-| `alba-api` | API publique et cron | À créer |
-| `alba-workflows` | Worker hébergeant le workflow | À créer |
-| `alba-price-check` | Définition du Workflow | À créer |
+| `alba-web` | Nuxt et transmission API | Déployé sur dev |
+| `alba-api` | API interne et futur cron | Déployé sur dev, sans cron |
+| `alba-workflows` | Worker hébergeant le workflow | Déployé sur dev, sans URL publique |
+| `alba-price-check` | Définition du Workflow | Squelette déployé sur dev |
 | Cron API | Dispatcher et réconciliation | À configurer |
 | Projet / branche Neon | PostgreSQL | À provisionner ou raccorder |
-| Binding Web → API | Communication interne | À configurer |
-| Binding API → Workflow | Création et consultation d’instances | À configurer |
+| Binding Web → API | Communication interne | Vérifié sur dev : HTTP et oRPC |
+| Binding API → Workflow | Création et consultation d’instances | Provisionné ; appel depuis API à tester en B07 |
 | Compte / clé Zyte | Extraction externe | À configurer et tester |
 
 Les noms seront suffixés ou isolés par environnement. Les API exactes d’Alchemy doivent être validées contre une version épinglée ; ne pas mélanger la documentation v1 et la génération actuelle.
@@ -368,9 +368,9 @@ Corréler les logs avec `productId`, `checkId`, `workflowId` et la tentative fou
 | Structure cible du monorepo | Définie |
 | Mise à jour de ce document | Réalisée |
 | Fondations locales | Nuxt, API Hono/oRPC, squelette Workflow et packages initialisés ; aucune fonctionnalité métier |
-| Alchemy | 2.0.0-beta.87 épinglé ; stack web partielle typée, non déployée |
+| Alchemy | 2.0.0-beta.87 épinglé ; trois Workers et un Workflow déployés sur dev |
 | Migrations et intégrations métier | Non commencées |
-| Ressources cloud et déploiement bout en bout | Non confirmés |
+| Ressources cloud B02 | Déployées sur dev ; Web → API HTTP/oRPC et squelette Workflow exécutés |
 
 Le dépôt ne contenait initialement que ce document. La structure ci-dessus reste une cible : les packages auth, tracking, extraction et contracts sont des points de départ vides. `bun install --frozen-lockfile`, `bun run typecheck`, `bun run build` et `bun run test` passent localement ; deux tests vérifient les routes de santé et RPC. Le démarrage local de Nuxt et de l’API et leurs réponses HTTP ont également été vérifiés. Le build Nuxt local utilise le preset Node, pas une validation Cloudflare.
 
@@ -381,7 +381,7 @@ Les identifiants **Bxx** remplacent le plan Axx de l’ancienne architecture Pyt
 | ID | Chantier | Critère d’acceptation | Statut |
 | --- | --- | --- | --- |
 | B01 | Initialisation monorepo | Bun/Turbo, workspaces et TypeScript strict fonctionnels | Réalisé localement |
-| B02 | Versions et infrastructure | Version Alchemy épinglée ; premier déploiement reproductible | Partiel : génération 2 bêta épinglée, stack web seule typée ; déploiement et bindings non vérifiés |
+| B02 | Versions et infrastructure | Version Alchemy épinglée ; premier déploiement reproductible | Réalisé sur dev : trois Workers, Workflow et bindings provisionnés ; santé via Nuxt et exécution du squelette vérifiées ; redéploiement réussi |
 | B03 | Contrats Zod | Contrats API et extraction, fixtures valides/invalides | Non commencé |
 | B04 | Neon + Drizzle | Schéma, migrations et transactions atomiques validés ; contraintes d’unicité permettant une finalisation idempotente | Non commencé |
 | B05 | Adaptateur Zyte | Extraction HTTP réelle normalisée ; erreurs classées | Non commencé |
@@ -449,7 +449,7 @@ La validation couvre également :
 - le recours navigateur seulement lorsqu’il est autorisé ;
 - les migrations, secrets et environnements isolés.
 
-**Prochaine action :** valider les intégrations et bindings, puis réaliser la première vérification durable : une instance Workflow appelle Zyte en HTTP et persiste une observation valide dans Neon, avec finalisation idempotente, erreurs classées et reprise après panne SQL vérifiées dès ce livrable.
+**Prochaine action :** implémenter B03–B05, puis réaliser la première vérification durable : une instance Workflow appelle Zyte en HTTP et persiste une observation valide dans Neon, avec finalisation idempotente, erreurs classées et reprise après panne SQL vérifiées dès ce livrable.
 
 ## 13. Références techniques
 
@@ -468,7 +468,9 @@ Documentation à revérifier contre les versions retenues lors de l’implément
 
 ### Livrable fondations — limites vérifiées
 
-Alchemy 2.0.0-beta.87, son provider Cloudflare et son intégration frontend sont épinglés ensemble ; cette génération bêta utilise Effect et diffère de la v1. `alchemy.run.ts` ne décrit que le site Nuxt : il est typé, mais son build Cloudflare, son état et son déploiement ne sont pas validés. Les Workers API et Workflow ne sont pas encore provisionnés ni reliés. Le Workflow est un squelette sans traitement et ne doit pas être considéré opérationnel. Neon/Drizzle expose seulement une fabrique HTTP : aucune connexion, transaction ou migration n’a été essayée. Better Auth, Nuxt UI, Query, Zyte, cron, proxy service binding et qualité complémentaire restent à intégrer ; les workflows GitHub ajoutés doivent encore être exécutés sur GitHub. Aucun appel Zyte ou déploiement cloud effectué.
+Alchemy, son provider Cloudflare et l’intégration frontend sont épinglés en **2.0.0-beta.87**, avec Effect et son runtime Bun en **4.1.5**. La stack déclare Nuxt, API, Workflows et les bindings Web → API et API → Workflow. Le 22 novembre 2026, le stage `dev` a été déployé puis redéployé avec les mêmes identifiants de ressources. Les routes `/api/health` et `/api/rpc/health` répondent sur l’origine Nuxt ; une instance du squelette `alba-price-check-dev` a terminé avec `status: not-implemented`. Le plan suivant ne prévoit aucun changement.
+
+Le [guide infrastructure](docs/infrastructure.md) décrit les commandes et les preuves. Le test de Workflow passe par l’API de gestion Cloudflare : le déclenchement depuis le binding du Worker API reste à valider en B07. Aucun traitement métier, cron, connexion Neon, authentification ou appel Zyte n’est implémenté. Le build Cloudflare et le déploiement Nuxt sont désormais vérifiés ; l’application reste une page provisoire.
 
 ### Documentation du dépôt
 

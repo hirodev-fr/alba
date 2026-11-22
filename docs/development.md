@@ -35,7 +35,7 @@ curl -fsS -X POST http://localhost:3001/rpc/health \
   -H 'content-type: application/json' -d '{}'
 ```
 
-Les réponses attendues sont respectivement `{"status":"ok"}` et `{"json":{"status":"ok"}}`. Il n’existe pas encore de proxy depuis Nuxt vers l’API ; ces URL servent uniquement au développement local.
+Les réponses attendues sont respectivement `{"status":"ok"}` et `{"json":{"status":"ok"}}`. Le proxy Nuxt `/api/*` utilise le service binding `API`, disponible avec Alchemy. Avec `bun run dev`, ce binding est absent : le proxy retourne 503 et ces URL directes servent au développement local. `bun run infra:dev` démarre les applications avec les bindings Alchemy.
 
 ## Commandes de vérification
 
@@ -50,15 +50,17 @@ Toutes les commandes suivantes se lancent depuis la racine :
 | `bun run test` | Exécute les tests déclarés dans les workspaces ; actuellement, ceux de l’API. |
 | `bun run build` | Construit les applications Web, API et Workflows. |
 
-Les tests actuels couvrent les routes de santé HTTP et oRPC ainsi qu’une route RPC absente. Le build Nuxt utilise localement le preset Nitro `node-server` ; les builds API et Workflows sont des bundles Bun. Ils ne prouvent pas que les applications fonctionnent dans `workerd` ou sur Cloudflare.
+Le [guide infrastructure](infrastructure.md) décrit aussi `infra:plan`, `infra:deploy`, `infra:verify` et `build:cloudflare`.
+
+Les tests actuels couvrent les routes de santé HTTP et oRPC ainsi qu’une route RPC absente. Le build Nuxt utilise localement le preset Nitro `node-server` ; les builds API et Workflows sont des bundles Bun. Ils ne prouvent pas à eux seuls une exécution Cloudflare ; le déploiement dev B02 et les tests cloud distincts sont décrits dans le guide infrastructure.
 
 Ultracite 8 utilise les configurations racine `oxlint.config.mts` et `oxfmt.config.mts`. Exécuter `bun run check` après modification ; `bun run fix` modifie les fichiers concernés. Les exceptions ciblées présentes dans les squelettes correspondent aux points d’entrée vides et à la méthode requise par Cloudflare.
 
 ## Environnement et secrets
 
-Les commandes ci-dessus fonctionnent sans fichier `.env`. Le fichier [`.env.example`](../.env.example) répertorie des variables **prévues**, non branchées aux applications actuelles : connexion Neon, Better Auth, Zyte et credentials de provisionnement. Ne pas les renseigner dans du code destiné au navigateur ni versionner leurs valeurs. `.env`, ses variantes et les fichiers `.dev.vars` sont ignorés par Git.
+Les commandes ci-dessus fonctionnent sans fichier `.env`. Le fichier [`.env.example`](../.env.example) répertorie les credentials optionnels de déploiement et les variables métier **prévues**, non branchées aux applications actuelles : connexion Neon, Better Auth, Zyte et credentials de provisionnement. Ne pas les renseigner dans du code destiné au navigateur ni versionner leurs valeurs. `.env`, ses variantes et les fichiers `.dev.vars` sont ignorés par Git.
 
-Ne pas considérer ces noms ou exemples comme une configuration de production complète : les bindings, la validation des variables et la distribution des secrets restent à implémenter.
+Ne pas considérer ces noms ou exemples comme une configuration de production complète : les bindings B02 sont déclarés par Alchemy ; la validation des variables et la distribution des secrets métier restent à implémenter.
 
 ## Dépannage
 
