@@ -1,1 +1,2 @@
-// oxlint-disable unicorn/no-empty-file -- Reserved package entry point.
+export { createZyteExtractor } from "./zyte/client";
+export type { ZyteOptions } from "./zyte/client";
