@@ -1,18 +1,13 @@
 import { router } from "@alba/api";
 import { priceCheckParamsV1Schema } from "@alba/contracts";
-import type { PriceCheckParamsV1 } from "@alba/contracts";
 import { RPCHandler } from "@orpc/server/fetch";
 import { Hono } from "hono";
 
-interface Env {
+import { scheduled } from "./scheduled";
+import type { SchedulerEnv } from "./scheduled";
+
+interface Env extends SchedulerEnv {
   WORKFLOW_VERIFY_TOKEN?: string;
-  PRICE_CHECK?: {
-    create: (options: {
-      id: string;
-      params: PriceCheckParamsV1;
-    }) => Promise<{ id: string }>;
-    get: (id: string) => Promise<{ status: () => Promise<unknown> }>;
-  };
 }
 const app = new Hono<{ Bindings: Env }>();
 const rpc = new RPCHandler(router);
@@ -64,4 +59,5 @@ app.use("/rpc/*", async (c, next) => {
   }
   return next();
 });
-export default app;
+export { app };
+export default { fetch: app.fetch, scheduled };

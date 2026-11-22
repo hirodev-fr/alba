@@ -32,7 +32,8 @@ export default Alchemy.Stack(
       workflows,
       workflowName,
       databaseUrl,
-      Redacted.make(process.env.WORKFLOW_VERIFY_TOKEN ?? "")
+      Redacted.make(process.env.WORKFLOW_VERIFY_TOKEN ?? ""),
+      process.env.DISPATCH_ENABLED === "true"
     );
     const web = yield* createWeb(api);
     return {
