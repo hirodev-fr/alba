@@ -1,6 +1,6 @@
 # Alba
 
-Alba est un projet de suivi de prix : l’objectif est de surveiller des fiches produit et de consulter l’historique de leurs prix. Le dépôt contient actuellement les **fondations locales** du monorepo ; les suivis, l’authentification et les extractions ne sont pas encore implémentés.
+Alba est un projet de suivi de prix : l’objectif est de surveiller des fiches produit et de consulter l’historique de leurs prix. Le dépôt contient actuellement les **fondations et l’infrastructure dev** du monorepo ; les suivis, l’authentification et les extractions ne sont pas encore implémentés.
 
 ## Démarrage rapide
 
@@ -29,4 +29,4 @@ Aucune variable d’environnement ni aucun service externe ne sont nécessaires 
 - [Suivi du projet](ALBA_PROGRESS.md) : décisions, risques, chantiers et état d’avancement.
 - [Conventions pour les agents](AGENTS.md) : règles du dépôt et références techniques.
 
-Le build local Nuxt cible Node et les builds Workers produisent des bundles : ils ne valident pas une exécution Cloudflare. La configuration Alchemy est partielle et non déployée ; aucun appel Zyte n’est effectué.
+La stack Alchemy 2.0.0-beta.87 est déployée sur `dev` : Nuxt transmet `/api/*` au Worker API et le squelette Workflow peut être exécuté. Les suivis, Neon et Zyte restent à intégrer. Voir le [guide infrastructure](docs/infrastructure.md) pour le plan, le déploiement et la vérification cloud.

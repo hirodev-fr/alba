@@ -5,24 +5,22 @@ Ce document distingue le code présent de l’architecture visée. Les décision
 ## État actuel
 
 ```text
-Navigateur → Nuxt (page provisoire)
-Outil local → API Hono → route de santé ou procédure oRPC de santé
-
-Workflow : squelette isolé       Neon : fabrique de client seulement
-Alchemy : déclaration Nuxt seule, non déployée
+Navigateur → Nuxt → /api/* → binding API → Hono/oRPC (santé)
+API → binding PRICE_CHECK provisionné → Worker Workflows (squelette)
+Neon : fabrique de client seulement
 ```
 
-Il n’y a actuellement aucune liaison Web → API, aucun suivi produit, aucune connexion à une base, aucun appel Zyte et aucun déclenchement de Workflow. Le squelette de Workflow retourne `not-implemented` et ne possède pas de point de déclenchement public.
+Les trois Workers et le Workflow sont déployés sur le stage `dev`. Seul Nuxt possède une URL workers.dev ; API et Workflows restent internes. HTTP et oRPC ont été vérifiés via Nuxt. Une instance du squelette a terminé via l’API de gestion Cloudflare ; le déclenchement par le Worker API reste à valider en B07. Aucun suivi, appel Zyte ou accès SQL n’est implémenté. Voir [les preuves et commandes](infrastructure.md).
 
 ## Applications
 
 | Répertoire | Présent | Responsabilité visée |
 | --- | --- | --- |
-| `apps/web` | Application Nuxt 4 et page provisoire. | Interface, rendu serveur et transmission de `/api/*` vers l’API. |
+| `apps/web` | Nuxt 4, page provisoire et proxy serveur `/api/*`. | Interface, rendu serveur et transmission de `/api/*` vers l’API. |
 | `apps/api` | Hono, `GET /health`, adaptation oRPC sous `/rpc/*` et serveur Bun local. | API, authentification, cron et dispatcher. |
 | `apps/workflows` | Classe `PriceCheckWorkflow` et réponse HTTP 404. | Worker hébergeant le Workflow durable de vérification. |
 
-Les trois applications correspondent aux trois Workers visés ; leur provisionnement, leurs bindings et leur communication ne sont pas encore configurés ni validés.
+Les trois applications correspondent aux Workers déclarés par Alchemy. Le cron et les traitements métier restent à implémenter.
 
 ## Packages
 
@@ -55,8 +53,8 @@ Ce schéma est une **cible**, pas une représentation des connexions en fonction
 
 ## Infrastructure et intégrations
 
-- **Alchemy** : `alchemy`, `@alchemy.run/cloudflare` et `@alchemy.run/frontend-frameworks` sont épinglés ensemble en `2.0.0-beta.87`. [`alchemy.run.ts`](../alchemy.run.ts) ne déclare que le site Nuxt. La stack, l’état et le build Cloudflare n’ont pas été validés par déploiement. Ne pas mélanger les API de la génération 2 avec celles d’Alchemy v1.
-- **Cloudflare** : les Workers API et Workflow, le cron, les service bindings, les secrets et les environnements restent à configurer. Les bundles locaux ne sont pas une validation du runtime.
+- **Alchemy** : `alchemy`, `@alchemy.run/cloudflare` et `@alchemy.run/frontend-frameworks` sont épinglés ensemble en `2.0.0-beta.87`. [`alchemy.run.ts`](../alchemy.run.ts) assemble les modules `infra/`, utilise l’état distant Cloudflare et isole les noms par stage. Le build Nitro Cloudflare, le premier déploiement dev et le redéploiement sont vérifiés.
+- **Cloudflare** : bindings `API` (Web → API) et `PRICE_CHECK` (API → Workflow cross-worker) provisionnés. Pas de cron ni de secrets métier injectés à ce stade. Les routes de santé via Nuxt et le squelette Workflow sont exécutés sur Cloudflare ; les méthodes de création/consultation du binding API seront exercées en B07.
 - **Neon et Drizzle** : `createDb` construit un client HTTP à partir d’une URL fournie par le serveur. Aucune connexion, migration ou transaction n’a été testée. Les transactions interactives exigeraient de réévaluer le transport.
 - **Zyte, Better Auth et interface métier** : non intégrés. Les variables proposées dans `.env.example` ne rendent pas ces fonctionnalités opérationnelles.
 

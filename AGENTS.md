@@ -5,7 +5,7 @@
 - Lire [ALBA_PROGRESS.md](ALBA_PROGRESS.md) avant de modifier l’architecture ; il distingue les décisions cibles des fonctionnalités réellement implémentées.
 - Le dépôt est un monorepo Bun et Turborepo en TypeScript strict. Consulter [l’architecture](docs/architecture.md) et le [guide de développement](docs/development.md) pour les frontières et les commandes.
 - Garder les secrets et les implémentations serveur hors du navigateur. Ne jamais versionner de credentials ou de fichiers d’environnement locaux.
-- Utiliser les API d’Alchemy **2.0.0-beta.87**, sans les mélanger avec celles de la v1. La stack est partielle et non validée en cloud : ne pas annoncer un déploiement ou un binding fonctionnel sans vérification.
+- Utiliser les API d’Alchemy **2.0.0-beta.87**, sans les mélanger avec celles de la v1. L’infrastructure B02 est déployée sur dev ; les intégrations métier restent partielles. Consulter les preuves dans `docs/infrastructure.md` et ne pas annoncer une intégration fonctionnelle sans vérification adaptée.
 
 ## Collaboration Git
 
