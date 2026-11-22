@@ -1,6 +1,6 @@
 # Alba
 
-Alba est un projet de suivi de prix : l’objectif est de surveiller des fiches produit et de consulter l’historique de leurs prix. Le dépôt contient actuellement les **fondations et l’infrastructure dev** du monorepo ; les suivis, l’authentification et les extractions ne sont pas encore implémentés.
+Alba est un projet de suivi de prix : l’objectif est de surveiller des fiches produit et de consulter l’historique de leurs prix. Le dépôt contient actuellement les **fondations, l’infrastructure dev et les contrats Zod B03** du monorepo ; les suivis, l’authentification et les extractions ne sont pas encore implémentés.
 
 ## Démarrage rapide
 
@@ -26,6 +26,7 @@ Aucune variable d’environnement ni aucun service externe ne sont nécessaires 
 
 - [Développement](docs/development.md) : commandes, tests, configuration locale, CI GitHub et dépannage.
 - [Architecture](docs/architecture.md) : applications, packages, flux cible et limites des intégrations.
+- [Contrats B03](docs/contracts.md) : schémas API, extraction, Workflow et fixtures de validation.
 - [Suivi du projet](ALBA_PROGRESS.md) : décisions, risques, chantiers et état d’avancement.
 - [Conventions pour les agents](AGENTS.md) : règles du dépôt et références techniques.
 

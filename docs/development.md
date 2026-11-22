@@ -47,14 +47,14 @@ Toutes les commandes suivantes se lancent depuis la racine :
 | `bun run fix` | Applique les corrections et le formatage automatiques ; des erreurs peuvent nécessiter une correction manuelle. |
 | `bunx ultracite doctor` | Diagnostique l’installation et les configurations Ultracite, Oxlint et Oxfmt. |
 | `bun run typecheck` | Vérifie la configuration Alchemy racine, puis les workspaces qui déclarent cette tâche. |
-| `bun run test` | Exécute les tests déclarés dans les workspaces ; actuellement, ceux de l’API. |
+| `bun run test` | Exécute les tests Bun de l’API et des contrats B03 via Turbo. |
 | `bun run build` | Construit les applications Web, API et Workflows. |
 
 Le [guide infrastructure](infrastructure.md) décrit aussi `infra:plan`, `infra:deploy`, `infra:verify` et `build:cloudflare`.
 
-Les tests actuels couvrent les routes de santé HTTP et oRPC ainsi qu’une route RPC absente. Le build Nuxt utilise localement le preset Nitro `node-server` ; les builds API et Workflows sont des bundles Bun. Ils ne prouvent pas à eux seuls une exécution Cloudflare ; le déploiement dev B02 et les tests cloud distincts sont décrits dans le guide infrastructure.
+Les tests actuels couvrent les routes de santé HTTP et oRPC, une route RPC absente et les [contrats B03](contracts.md) avec fixtures valides/invalides. Pour cibler les contrats : `bun run --cwd packages/contracts test`. Le build Nuxt utilise localement le preset Nitro `node-server` ; les builds API et Workflows sont des bundles Bun. Ils ne prouvent pas à eux seuls une exécution Cloudflare ; le déploiement dev B02 et les tests cloud distincts sont décrits dans le guide infrastructure.
 
-Ultracite 8 utilise les configurations racine `oxlint.config.mts` et `oxfmt.config.mts`. Exécuter `bun run check` après modification ; `bun run fix` modifie les fichiers concernés. Les exceptions ciblées présentes dans les squelettes correspondent aux points d’entrée vides et à la méthode requise par Cloudflare.
+Ultracite 8 utilise les configurations racine `oxlint.config.mts` et `oxfmt.config.mts`. Exécuter `bun run check` après modification ; `bun run fix` modifie les fichiers concernés. Les exceptions ciblées correspondent aux points d’entrée vides, à la méthode requise par Cloudflare et au point d’entrée public du package de contrats.
 
 ## Environnement et secrets
 

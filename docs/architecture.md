@@ -28,13 +28,15 @@ Les trois applications correspondent aux Workers déclarés par Alchemy. Le cron
 | --- | --- | --- |
 | `packages/api` | Routeur oRPC avec procédure `health` et type associé. | Procédures et types de l’API. |
 | `packages/db` | Fabrique Drizzle utilisant le driver Neon HTTP, sans connexion à l’import. | Schémas, accès aux données et migrations. |
-| `packages/contracts` | Point d’entrée réservé ; Zod est installé. | Schémas et types partagés sans code serveur. |
+| `packages/contracts` | Contrats Zod B03, types inférés et fixtures API/extraction/Workflow. | Schémas et types partagés sans code serveur. |
 | `packages/auth` | Point d’entrée réservé. | Authentification. |
 | `packages/tracking` | Point d’entrée réservé. | Logique métier commune aux applications serveur. |
 | `packages/extraction` | Point d’entrée réservé. | Adaptateur d’extraction et normalisation des résultats. |
 | `packages/config` | Configuration TypeScript stricte partagée. | Conventions techniques communes. |
 
 Les workspaces consomment les points d’entrée TypeScript de leurs dépendances internes. Les applications assemblent les packages ; les secrets, accès SQL et implémentations serveur ne doivent pas être importés dans le code navigateur.
+
+Les [contrats B03](contracts.md) définissent les entrées et réponses métier, le contexte d’offre, les montants décimaux, les observations et les erreurs classées. Leur validation est testée localement. Les routes métier et l’utilisation de ces contrats par l’adaptateur Zyte et le Workflow restent à implémenter ; le squelette B02 conserve son ancien payload jusqu’à B07.
 
 ## Flux cible
 
