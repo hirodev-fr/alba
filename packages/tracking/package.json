@@ -7,7 +7,13 @@
   "scripts": {
     "typecheck": "tsc --noEmit"
   },
+  "dependencies": {
+    "@alba/contracts": "workspace:*",
+    "@alba/db": "workspace:*",
+    "drizzle-orm": "1.0.0-rc.6"
+  },
   "devDependencies": {
-    "@alba/config": "workspace:*"
+    "@alba/config": "workspace:*",
+    "@types/bun": "1.4.4"
   }
 }

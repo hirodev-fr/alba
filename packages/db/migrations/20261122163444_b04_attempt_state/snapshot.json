@@ -1,0 +1,38 @@
+{
+  "type": "diff",
+  "version": "10",
+  "dialect": "postgres",
+  "id": "de7907e7-7f52-4095-b882-78296192b024",
+  "prevIds": ["b5245c8b-c41b-4040-b3f9-d0559517d7eb"],
+  "footprints": [
+    {
+      "statementType": "alter_check",
+      "statementTarget": ["table", "public", "extraction_attempts"],
+      "writes": [
+        "s|ck|public.extraction_attempts.extraction_attempts_state_check"
+      ],
+      "reads": [
+        "n|tbl|public.extraction_attempts",
+        "n|sch|public",
+        "n|col|public.extraction_attempts.status",
+        "n|col|public.extraction_attempts.finished_at",
+        "n|col|public.extraction_attempts.duration_ms",
+        "n|col|public.extraction_attempts.result",
+        "e|col|public.extraction_attempts.status",
+        "e|col|public.extraction_attempts.finished_at",
+        "e|col|public.extraction_attempts.duration_ms",
+        "e|col|public.extraction_attempts.result"
+      ],
+      "sqlHash": "c9d171444857ca25"
+    }
+  ],
+  "deltas": [
+    {
+      "op": "alter",
+      "key": "checks\u0000[\"public\",\"extraction_attempts\",\"extraction_attempts_state_check\"]",
+      "set": {
+        "value": "\n    ((\"status\" = 'running' and \"finished_at\" is null and \"duration_ms\" is null and \"result\" is null)\n    or (\"status\" in ('succeeded', 'failed') and \"finished_at\" is not null and \"duration_ms\" is not null and \"result\" is not null\n      and (\"result\"->>'version') = '1'\n      and ((\"status\" = 'succeeded' and \"result\"->>'status' = 'success') or (\"status\" = 'failed' and \"result\"->>'status' = 'error')))) is true\n  "
+      }
+    }
+  ]
+}
