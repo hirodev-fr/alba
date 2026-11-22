@@ -7,6 +7,9 @@
   ],
   "scripts": {
     "dev": "turbo run dev",
+    "infra:plan": "alchemy plan --stage dev",
+    "infra:deploy": "alchemy deploy --stage dev",
+    "infra:dev": "alchemy dev --stage dev",
     "build": "turbo run build",
     "typecheck": "tsc --noEmit && turbo run typecheck",
     "test": "turbo run test",
