@@ -25,7 +25,7 @@ Turborepo lance les deux tâches de développement disponibles :
 | Web | <http://localhost:3000> | Page Nuxt provisoire. |
 | API | <http://localhost:3001> | Serveur Bun avec rechargement, exposant Hono et oRPC. |
 
-Le port 3001 doit être disponible pour l’API ; Nuxt utilise le port 3000 par défaut. `Ctrl+C` arrête les tâches. Le Workflow n’a pas de serveur de développement local configuré. Le serveur Bun permet de développer l’API, mais ne reproduit pas le runtime Cloudflare Workers.
+Le port 3001 doit être disponible pour l’API ; Nuxt utilise le port 3000 par défaut. `Ctrl+C` arrête les tâches. Le Workflow n’est pas lancé par cette commande ; `bunx alchemy dev` l’héberge localement avec ses bindings. Le serveur Bun permet de développer l’API, mais ne reproduit pas le runtime Cloudflare Workers.
 
 Pour contrôler l’API sans navigateur :
 
@@ -35,7 +35,7 @@ curl -fsS -X POST http://localhost:3001/rpc/health \
   -H 'content-type: application/json' -d '{}'
 ```
 
-Les réponses attendues sont respectivement `{"status":"ok"}` et `{"json":{"status":"ok"}}`. Le proxy Nuxt `/api/*` utilise le service binding `API`, disponible avec Alchemy. Avec `bun run dev`, ce binding est absent : le proxy retourne 503 et ces URL directes servent au développement local. `bun run infra:dev` démarre les applications avec les bindings Alchemy.
+Les réponses attendues sont respectivement `{"status":"ok"}` et `{"json":{"status":"ok"}}`. Le proxy Nuxt `/api/*` utilise le service binding `API`, disponible avec Alchemy. Avec `bun run dev`, ce binding est absent : le proxy retourne 503 et ces URL directes servent au développement local. `bunx alchemy dev` (ou `bun run infra:dev`) démarre les applications avec les bindings Alchemy, dans un stage personnel distinct du stage cloud `dev`. Neon reste distant et ses migrations sont appliquées automatiquement. Les ports locaux sont affichés par Alchemy ; HTTP et oRPC via Nuxt ont été vérifiés dans ce mode. Voir le [guide Neon B04](database.md).
 
 ## Commandes de vérification
 
@@ -47,27 +47,29 @@ Toutes les commandes suivantes se lancent depuis la racine :
 | `bun run fix` | Applique les corrections et le formatage automatiques ; des erreurs peuvent nécessiter une correction manuelle. |
 | `bunx ultracite doctor` | Diagnostique l’installation et les configurations Ultracite, Oxlint et Oxfmt. |
 | `bun run typecheck` | Vérifie la configuration Alchemy racine, puis les workspaces qui déclarent cette tâche. |
-| `bun run test` | Exécute les tests Bun de l’API et des contrats B03 via Turbo. |
+| `bun run test` | Exécute les tests Bun de l’API et des contrats B03 via Turbo, sans service externe. |
 | `bun run build` | Construit les applications Web, API et Workflows. |
+| `bun run db:generate --name description` | Génère une migration Drizzle ; Alchemy l’applique au prochain passage. |
+| `bun run db:test` | Teste réellement Neon avec `DATABASE_URL` sur un projet de développement déjà migré. |
 
 Le [guide infrastructure](infrastructure.md) décrit aussi `infra:plan`, `infra:deploy`, `infra:verify` et `build:cloudflare`.
 
-Les tests actuels couvrent les routes de santé HTTP et oRPC, une route RPC absente et les [contrats B03](contracts.md) avec fixtures valides/invalides. Pour cibler les contrats : `bun run --cwd packages/contracts test`. Le build Nuxt utilise localement le preset Nitro `node-server` ; les builds API et Workflows sont des bundles Bun. Ils ne prouvent pas à eux seuls une exécution Cloudflare ; le déploiement dev B02 et les tests cloud distincts sont décrits dans le guide infrastructure.
+Les tests actuels couvrent les routes de santé HTTP et oRPC, une route RPC absente et les [contrats B03](contracts.md) avec fixtures valides/invalides. La suite Neon explicite couvre les contraintes SQL, transactions et reprises de finalisation ; voir [les précautions et preuves](database.md). Pour cibler les contrats : `bun run --cwd packages/contracts test`. Le build Nuxt utilise localement le preset Nitro `node-server` ; les builds API et Workflows sont des bundles Bun. Ils ne prouvent pas à eux seuls une exécution Cloudflare ; le déploiement dev B02 et les tests cloud distincts sont décrits dans le guide infrastructure.
 
 Ultracite 8 utilise les configurations racine `oxlint.config.mts` et `oxfmt.config.mts`. Exécuter `bun run check` après modification ; `bun run fix` modifie les fichiers concernés. Les exceptions ciblées correspondent aux points d’entrée vides, à la méthode requise par Cloudflare et au point d’entrée public du package de contrats.
 
 ## Environnement et secrets
 
-Les commandes ci-dessus fonctionnent sans fichier `.env`. Le fichier [`.env.example`](../.env.example) répertorie les credentials optionnels de déploiement et les variables métier **prévues**, non branchées aux applications actuelles : connexion Neon, Better Auth, Zyte et credentials de provisionnement. Ne pas les renseigner dans du code destiné au navigateur ni versionner leurs valeurs. `.env`, ses variantes et les fichiers `.dev.vars` sont ignorés par Git.
+`check`, `typecheck`, `test` et `build` fonctionnent sans fichier `.env`. `alchemy dev` utilise les profils Cloudflare/Neon, ou les credentials de provisionnement serveur décrits dans [`.env.example`](../.env.example). Alchemy injecte la connexion Neon en secret dans API et Workflows. Pour `db:test`, configurer `DATABASE_URL` dans le `.env` racine après provisionnement du projet personnel. Better Auth et Zyte restent des variables prévues. Ne pas les renseigner dans du code destiné au navigateur ni versionner leurs valeurs. `.env`, ses variantes et les fichiers `.dev.vars` sont ignorés par Git.
 
-Ne pas considérer ces noms ou exemples comme une configuration de production complète : les bindings B02 sont déclarés par Alchemy ; la validation des variables et la distribution des secrets métier restent à implémenter.
+Ne pas considérer ces noms ou exemples comme une configuration de production complète : les bindings sont déclarés par Alchemy ; la validation et l’utilisation des variables métier dans les points d’entrée applicatifs restent à intégrer.
 
 ## Dépannage
 
 - **Installation non reproductible** : vérifier la version de Bun, puis la cohérence entre les manifests et `bun.lock`. Ne pas remplacer `--frozen-lockfile` silencieusement dans une vérification.
 - **Port occupé** : arrêter le processus utilisant le port concerné avant de relancer le développement.
 - **Erreurs de format ou de lint** : consulter la sortie de `bun run check`, puis appliquer `bun run fix` et corriger les erreurs restantes. `bunx ultracite doctor` aide à diagnostiquer l’installation.
-- **Échec lié à un service externe** : aucun service cloud n’est nécessaire au parcours local décrit ici ; vérifier qu’une commande ou une modification supplémentaire ne tente pas d’y accéder.
+- **Échec lié à un service externe** : `check/typecheck/test/build` ne nécessitent aucun cloud. `alchemy dev` et `db:test` accèdent à Neon ; contrôler le profil, le projet personnel et les migrations sans afficher les secrets.
 
 ## Intégration continue GitHub
 

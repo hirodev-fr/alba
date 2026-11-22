@@ -1,19 +1,20 @@
 # Infrastructure B02
 
-`alchemy.run.ts` est la source de vérité. Les modules `infra/` déclarent trois Workers et un Workflow Cloudflare ; aucune configuration Wrangler parallèle n’est nécessaire.
+`alchemy.run.ts` est la source de vérité. Les modules `infra/` déclarent trois Workers, un Workflow Cloudflare et un projet Neon par stage ; aucune configuration Wrangler parallèle n’est nécessaire.
 
 | Ressource | Configuration |
 | --- | --- |
 | Web | Nuxt, preset Nitro `cloudflare_module`, URL workers.dev publique, binding `API` |
-| API | Hono/oRPC, workers.dev et URLs de preview désactivés, binding `PRICE_CHECK` |
-| Workflows | Classe exportée `PriceCheckWorkflow`, workers.dev et previews désactivés |
+| API | Hono/oRPC, workers.dev et URLs de preview désactivés, bindings `PRICE_CHECK` et secret `DATABASE_URL` |
+| Workflows | Classe exportée `PriceCheckWorkflow`, workers.dev et previews désactivés, secret `DATABASE_URL` |
 | PriceCheck | Workflow hébergé par Workflows, référence cross-worker dans API |
+| Database | Neon PostgreSQL 17, projet par stage, migrations Drizzle appliquées par Alchemy |
 
 Alchemy génère les noms des Workers par stack et stage. Le Workflow porte le nom `alba-price-check-<stage>`. Le stage `dev` est explicite dans les scripts ; pour un autre stage, utiliser directement `bunx alchemy plan --stage <stage>` puis `bunx alchemy deploy --stage <stage>`. Ne pas réutiliser un stage pour des environnements indépendants.
 
 ## Versions et accès
 
-Utiliser Bun **1.4.4**, Node **24.22.3** et `bun install --frozen-lockfile`. Alchemy, son provider Cloudflare et l’intégration frontend sont épinglés en **2.0.0-beta.87** ; Effect et `@effect/platform-bun` sont en **4.1.5**. Ce dernier est nécessaire au CLI local Bun.
+Utiliser Bun **1.4.4**, Node **24.22.3** et `bun install --frozen-lockfile`. Alchemy, ses providers Cloudflare/Neon et l’intégration frontend sont épinglés en **2.0.0-beta.87** ; Effect et `@effect/platform-bun` sont en **4.1.5**. Ce dernier est nécessaire au CLI local Bun.
 
 Le profil Alchemy local `default` est utilisé, sauf sélection explicite par les options du CLI. Les credentials existants restent dans `~/.alchemy`, hors du dépôt. Pour un environnement automatisé, les alternatives `CLOUDFLARE_ACCOUNT_ID` et `CLOUDFLARE_API_TOKEN` sont prises en charge par cette version ; les permissions doivent couvrir les Workers, Workflows et les ressources nécessaires au stockage d’état. Aucune clé métier Neon/Zyte/Better Auth n’est nécessaire pour B02.
 
@@ -42,7 +43,7 @@ bun run infra:verify <webUrl> <workflowName>
 
 Ce contrôle utilise le profil local, vérifie HTTP et oRPC via Nuxt, crée une instance de Workflow avec un identifiant unique, attend son état terminal pendant au plus 60 secondes et vérifie le résultat du squelette. Chaque exécution laisse une instance de test soumise à la rétention Cloudflare. Il n’appelle ni Zyte ni Neon. Il échouera intentionnellement quand le contrat du squelette sera remplacé en B07 ; l’adapter alors au nouveau comportement.
 
-Pour le développement avec bindings, `bun run infra:dev` sélectionne le runtime local Alchemy ; ce mode n’a pas été validé dans B02. Avec les serveurs Bun/Nuxt classiques (`bun run dev`), le binding `API` est absent et `/api/*` retourne 503. Aucun repli vers une URL distante n’est implicite.
+Pour le développement avec bindings, lancer `bunx alchemy dev` ou `bun run infra:dev`. Le CLI choisit son stage personnel (`dev_raphael` lors de la validation B04), distinct du stage déployé `dev`. Neon reste distant et Alchemy applique les migrations référencées par le projet. Ce mode est vérifié en B04 : Nuxt transmet les routes de santé HTTP/oRPC et les tests SQL Neon passent. La compatibilité Cloudflare utilise désormais `2026-11-02`, prise en charge par le workerd livré avec beta.87. Le chemin Nuxt est résolu de manière absolue pour fonctionner dans le processus enfant dev. Voir [la base B04](database.md). Avec les serveurs Bun/Nuxt classiques (`bun run dev`), le binding `API` est absent et `/api/*` retourne 503. Aucun repli vers une URL distante n’est implicite.
 
 ## Preuves du 22 novembre 2026
 
@@ -58,4 +59,4 @@ Le stage `dev` du profil local a été déployé et redéployé avec les mêmes 
 - Script final `infra:verify` : succès avec l’instance `b02-7755c91f-e04e-4a67-bfba-08be52bd4342`.
 - Plan final après redéploiement : `Plan: no changes`, toutes les ressources et tous les bindings en `noop`.
 
-Le déclenchement de cette instance utilise l’API de gestion Cloudflare. Le binding API → Workflow est provisionné ; son utilisation par la logique métier sera testée en B07. Les cookies, redirections d’authentification et droits utilisateurs seront validés en B11. Aucun cron, secret métier, schéma SQL ou traitement d’extraction n’est ajouté par B02. La CI GitHub continue à effectuer les contrôles locaux sans déployer.
+Le déclenchement de cette instance utilise l’API de gestion Cloudflare. Le binding API → Workflow est provisionné ; son utilisation par la logique métier sera testée en B07. Les cookies, redirections d’authentification et droits utilisateurs seront validés en B11. Aucun cron, secret métier, schéma SQL ou traitement d’extraction n’est ajouté par B02. La CI GitHub continue à effectuer les contrôles locaux sans déployer. Les bindings SQL et migrations décrits plus haut sont ajoutés par B04 et validés avec `alchemy dev` ; ils n’ont pas été déployés aux Workers distants B02.

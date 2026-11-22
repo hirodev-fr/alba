@@ -25,6 +25,8 @@ Exécuter depuis la racine avec Bun 1.4.4 et Node.js 24.22.3 (version indiquée 
 | `bun run typecheck` | Vérifier les types. |
 | `bun run test` | Exécuter les tests disponibles. |
 | `bun run build` | Construire les applications. |
+| `bun run db:generate --name description` | Générer une migration Drizzle versionnée, appliquée ensuite par Alchemy. |
+| `bun run db:test` | Vérifier les transactions sur Neon avec `DATABASE_URL` d’un projet de développement migré. |
 | `bunx ultracite doctor` | Diagnostiquer la configuration de qualité. |
 
 Choisir les vérifications adaptées à la modification et rapporter leurs résultats réels. `bun run fix` modifie les fichiers ; éviter les reformattages hors périmètre. Le hook Codex `PostToolUse` configuré pour `apply_patch` peut lancer `bunx ultracite fix --hook`.

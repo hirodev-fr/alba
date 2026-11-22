@@ -10,7 +10,7 @@ Chaque contrat d’échange porte `version: 1`. Les schémas sont nommés en cam
 
 - Identifiants opaques : 1 à 128 caractères ASCII alphanumériques, `_` ou `-`, premier caractère alphanumérique. Aucun choix d’identifiant SQL n’est imposé.
 - Dates : chaînes UTC `YYYY-MM-DDTHH:mm:ss.sssZ`, à la milliseconde. Le serveur devra convertir les dates SQL vers ce format.
-- Argent : chaîne décimale positive ou nulle, point décimal, sans signe, exposant ni zéros initiaux superflus. `"0"`, `"0.00"` et `"19.9900"` sont conservés à l’identique. Aucun passage par `Number` ; la précision SQL sera fixée en B04.
+- Argent : chaîne décimale positive ou nulle, point décimal, sans signe, exposant ni zéros initiaux superflus. `"0"`, `"0.00"` et `"19.9900"` sont conservés à l’identique. Aucun passage par `Number` ; B04 utilise `numeric` sans précision/échelle imposée pour éviter un arrondi silencieux ; les limites PostgreSQL restent applicables.
 - Devise : trois lettres ASCII majuscules ; pays : deux lettres ASCII majuscules. La syntaxe est validée, pas l’appartenance à un registre ISO ni la couverture du fournisseur.
 - Disponibilité : `in_stock`, `out_of_stock`, `unknown`. Une observation exige toujours un montant et une devise, même si le produit est indisponible.
 - URL : HTTP(S), nom de domaine, 4096 caractères maximum, sans credentials, espaces bruts ni caractères de contrôle. Les adresses IP littérales et les hôtes locaux (`localhost`, suffixes `.localhost`, `.local`, `.internal`) sont refusés. Chemin, fragment et paramètres sont conservés.
@@ -23,7 +23,7 @@ La validation d’URL reste syntaxique. La résolution DNS, les redirections, le
 
 `ExtractedPrice` contient `amount`, `currency`, `availability`, `title` nullable, `observedAt`, `sourceUrl` et la provenance `{ provider: "zyte", mode: "http" | "browser" }`. Il représente le prix normalisé d’une offre, sans structure brute Zyte ni HTML. B05 devra contrôler la correspondance entre requête et résultat (variante, pays, vendeur, devise), ainsi que le caractère exploitable du prix.
 
-`PriceObservationV1` associe ce prix à `id`, `productId` et `checkId`. `ProductV1` expose l’offre, son titre nullable, sa date de création et `currentObservation` nullable. L’intégrité des références et le choix de l’observation courante la plus récente relèvent de B04/B07.
+`PriceObservationV1` associe ce prix à `id`, `productId` et `checkId`. `ProductV1` expose l’offre, son titre nullable, sa date de création et `currentObservation` nullable. B04 ajoute les références composites et lit l’observation courante par `observed_at DESC, id DESC`. L’assemblage de la réponse API et l’utilisation dans le Workflow restent à intégrer en B07/B10.
 
 ## API
 
@@ -54,7 +54,7 @@ La période d’un suivi doit être strictement croissante (`endsAt > startsAt`)
 - `failed` : `finishedAt` et erreur classée obligatoires ;
 - `cancelled` : `finishedAt` obligatoire.
 
-Les champs d’une autre branche sont refusés : une vérification en attente ne peut pas contenir une observation finale. Les transitions, l’idempotence et l’intégrité SQL restent à implémenter.
+Les champs d’une autre branche sont refusés : une vérification en attente ne peut pas contenir une observation finale. B04 contraint les champs SQL selon le statut et les références vérification/observation/produit. `finalizeCheck` conserve le premier état terminal dans une transaction HTTP idempotente ; les autres transitions runtime restent à intégrer en B07/B10.
 
 ## Extraction et Workflow
 
