@@ -477,3 +477,7 @@ Le [README](README.md), le [guide de développement](docs/development.md) et la 
 ### CI et sécurité GitHub
 
 Les workflows versionnés exécutent les contrôles locaux et CodeQL ; Dependabot surveille Bun et les actions. Actionlint et les commandes de CI ont été vérifiés localement ; leur fonctionnement sur GitHub/Linux reste à confirmer après publication. La version Node sélectionnée par `.node-version` est 24.22.3. Les migrations, environnements isolés et déploiements restent hors du périmètre actuel.
+
+### Flux Git protégé
+
+Le flux par branches de travail et pull requests vers `dev` et `main`, ainsi que les réglages GitHub recommandés, sont documentés dans le [guide de développement](docs/development.md). La protection des branches reste à configurer et à vérifier sur GitHub ; la branche distante `main` n’a pas été constatée lors de cet examen.
