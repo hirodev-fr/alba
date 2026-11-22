@@ -53,6 +53,12 @@ export const priceChecks = pgTable(
       precision: 3,
     }).notNull(),
     workflowId: varchar("workflow_id", { length: 128 }).unique(),
+    nextReconcileAt: timestamp("next_reconcile_at", {
+      withTimezone: true,
+      precision: 3,
+    })
+      .notNull()
+      .default(sql`now() + interval '2 minutes'`),
     status: checkStatus("status").notNull().default("pending"),
     request: jsonb("request").$type<ExtractionRequestV1>(),
     startedAt: timestamp("started_at", { withTimezone: true, precision: 3 }),
@@ -75,6 +81,9 @@ export const priceChecks = pgTable(
     ),
     unique("price_checks_id_product_unique").on(table.id, table.productId),
     index("price_checks_status_due_idx").on(table.status, table.scheduledAt),
+    index("price_checks_reconcile_idx")
+      .on(table.nextReconcileAt, table.id)
+      .where(sql`${table.status} in ('pending', 'running')`),
     check(
       "price_checks_state_check",
       sql`

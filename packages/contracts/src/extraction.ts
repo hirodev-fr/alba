@@ -32,6 +32,7 @@ export const extractionErrorSchema = z.discriminatedUnion("category", [
       "access_denied",
       "unsupported_url",
       "invalid_response",
+      "workflow_failed",
     ]),
     message: labelSchema,
   }),

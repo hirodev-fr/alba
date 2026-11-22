@@ -67,7 +67,7 @@ Les champs d’une autre branche sont refusés : une vérification en attente ne
 | Catégorie | Codes | Traitement attendu |
 | --- | --- | --- |
 | `temporary` | `network`, `timeout`, `rate_limited`, `provider_unavailable` | Trois tentatives au maximum, attentes de 10 puis 20 secondes dans B07. |
-| `permanent` | `authentication`, `budget_exceeded`, `access_denied`, `unsupported_url`, `invalid_response` | Arrêt ; pas de reprise automatique illimitée. |
+| `permanent` | `authentication`, `budget_exceeded`, `access_denied`, `unsupported_url`, `invalid_response`, `workflow_failed` | Arrêt ; pas de reprise automatique illimitée. |
 | `business` | `missing_price`, `ambiguous_price`, `context_mismatch`, `currency_mismatch`, `product_not_found` | Résultat explicite sans observation invalide. |
 
 La classification est normalisée par Alba ; le mapping des réponses HTTP et des erreurs Zyte est réalisé en B05 (voir [extraction](extraction.md)). Un code d’authentification ou de budget ne peut pas être classé temporaire. La validation de structure ne garantit pas l’exactitude du prix extrait. Les messages doivent être rédigés par l’adaptateur, sans corps fournisseur ni credentials.
@@ -84,3 +84,5 @@ bun run test
 ```
 
 Les tests utilisent le runner Bun déjà présent et sont inclus dans la tâche Turbo/CI existante. Ils ne nécessitent ni compte cloud, ni base, ni clé Zyte.
+
+B09 ajoute `workflow_failed` pour une instance définitivement arrêtée sans résultat SQL final récupérable. Ce code est produit par la réconciliation, pas par Zyte ; voir [B09](reconciliation.md).
