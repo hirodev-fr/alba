@@ -22,8 +22,18 @@ export default Alchemy.Stack(
     const workflowName = `alba-price-check-${stage}`;
     const database = yield* createDatabase(stage);
     const databaseUrl = database.connectionUri.pipe(Output.map(Redacted.make));
-    const workflows = yield* createWorkflows(workflowName, databaseUrl);
-    const api = yield* createApi(workflows, workflowName, databaseUrl);
+    const workflows = yield* createWorkflows(workflowName, databaseUrl, {
+      ZYTE_API_KEY: Redacted.make(process.env.ZYTE_API_KEY ?? ""),
+      EXTRACTION_ENABLED:
+        process.env.EXTRACTION_ENABLED === "true" ? "true" : "false",
+      EXTRACTION_ALLOWED_HOSTS: process.env.EXTRACTION_ALLOWED_HOSTS ?? "",
+    });
+    const api = yield* createApi(
+      workflows,
+      workflowName,
+      databaseUrl,
+      Redacted.make(process.env.WORKFLOW_VERIFY_TOKEN ?? "")
+    );
     const web = yield* createWeb(api);
     return {
       webUrl: web.url,

@@ -112,3 +112,7 @@ Dependabot ouvre par défaut ses pull requests vers la branche par défaut, actu
 ## Benchmark B06
 
 `bun run extraction:benchmark --validate <corpus.json>` valide un corpus hors réseau. `--live <corpus.json> <nouveau-répertoire>` mesure les extractions avec `ZYTE_API_KEY`. `bun run extraction:cost <répertoire>` rapproche le coût avec la clé Dashboard `ZYTE_STATS_API_KEY` et `ZYTE_ORGANIZATION_ID` (alias `ZYTE_ORGANISATION_ID`). Ces commandes explicites sont exclues des tests ordinaires et de la CI ; les tests du calcul des métriques et du coût restent sans réseau. Voir [méthode, résultats et limites B06](extraction-benchmark.md).
+
+## Workflow B07
+
+`bun run test` inclut les tests de reprise du Workflow et du déclencheur opérateur sans réseau. `bun run db:test` exécute 10 tests Neon, dont gel du contexte et replay après panne SQL réelle. `bun run infra:verify <webUrl>` vérifie désormais uniquement HTTP/oRPC ; l'ancien lancement du squelette est remplacé par `bun run workflow:verify <webUrl> --live`, qui déclenche via le binding API et persiste une extraction réelle. L'option `--sql-failure` vérifie une reprise SQL dans le runtime avec un trigger temporaire ciblé. Configuration, dépenses et preuves : [guide B07](workflows.md).

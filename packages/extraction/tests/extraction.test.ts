@@ -253,3 +253,31 @@ test("requested variant must match extracted attributes", async () => {
     expect(result.error.code).toBe("context_mismatch");
   }
 });
+
+test("provider redirects are refused in Workers-compatible manual mode", async () => {
+  const calls: RequestInit[] = [];
+  const extract = createZyteExtractor({
+    apiKey: "test",
+    fetch: (_url, init) => {
+      calls.push(init);
+      return Promise.resolve(
+        new Response(null, {
+          status: 302,
+          headers: { location: "https://other.example" },
+        })
+      );
+    },
+  });
+  const result = await extract(request);
+  expect(calls).toHaveLength(1);
+  expect(calls[0]?.redirect).toBe("manual");
+  expect(result).toEqual({
+    version: 1,
+    status: "error",
+    error: {
+      category: "permanent",
+      code: "unsupported_url",
+      message: "Provider rejected the extraction request.",
+    },
+  });
+});

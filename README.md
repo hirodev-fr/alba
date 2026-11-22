@@ -1,6 +1,6 @@
 # Alba
 
-Alba est un projet de suivi de prix : l’objectif est de surveiller des fiches produit et de consulter l’historique de leurs prix. Le dépôt contient actuellement les **fondations, l’infrastructure dev, les contrats Zod B03 et la persistance Neon B04** du monorepo ; les routes de gestion des suivis, l’authentification restent à implémenter ; l’adaptateur HTTP Zyte B05 est vérifié par tests simulés et appel réel.
+Alba est un projet de suivi de prix : l’objectif est de surveiller des fiches produit et de consulter l’historique de leurs prix. Le dépôt contient actuellement les **fondations, l’infrastructure dev, les contrats Zod B03 et la persistance Neon B04** du monorepo ; les routes de gestion des suivis, l’authentification restent à implémenter ; l’adaptateur HTTP Zyte et le Workflow durable B07 sont assemblés et vérifiés en runtime local avec Zyte/Neon réels.
 
 ## Démarrage rapide
 
@@ -26,6 +26,7 @@ Aucune variable d’environnement ni aucun service externe ne sont nécessaires 
 
 - [Développement](docs/development.md) : commandes, tests, configuration locale, CI GitHub et dépannage.
 - [Architecture](docs/architecture.md) : applications, packages, flux cible et limites des intégrations.
+- [Workflow B07](docs/workflows.md) : étapes durables, retries bornés, finalisation idempotente et vérification réelle explicite.
 - [Benchmark B06](docs/extraction-benchmark.md) : corpus, exactitude, coût réel et limites de couverture.
 - [Extraction B05](docs/extraction.md) : adaptateur HTTP, politique URL et validation réelle explicite.
 - [Base de données B04](docs/database.md) : schéma, migrations Alchemy et tests Neon.
@@ -33,4 +34,4 @@ Aucune variable d’environnement ni aucun service externe ne sont nécessaires 
 - [Suivi du projet](ALBA_PROGRESS.md) : décisions, risques, chantiers et état d’avancement.
 - [Conventions pour les agents](AGENTS.md) : règles du dépôt et références techniques.
 
-La stack Alchemy 2.0.0-beta.87 est déployée sur `dev` : Nuxt transmet `/api/*` au Worker API et le squelette Workflow peut être exécuté. Neon B04 est provisionné et testé sur le stage personnel d’`alchemy dev` ; l’intégration Workflow/Zyte et les routes de suivis restent à réaliser. Voir le [guide infrastructure](docs/infrastructure.md) pour le plan, le déploiement et la vérification cloud.
+La stack Alchemy 2.0.0-beta.87 est déployée sur `dev` : Nuxt transmet `/api/*` au Worker API et le squelette Workflow peut être exécuté. Neon B04 est provisionné et testé sur le stage personnel d’`alchemy dev` ; le parcours Workflow/Zyte/Neon B07 est vérifié avec le runtime local Alchemy ; son déploiement distant et les routes de suivis restent à réaliser. Voir le [guide infrastructure](docs/infrastructure.md) pour le plan, le déploiement et la vérification cloud.

@@ -21,7 +21,8 @@
     "fix": "ultracite fix",
     "extraction:verify": "bun --env-file=.env scripts/verify-extraction.ts",
     "extraction:benchmark": "bun --env-file=.env scripts/benchmark-extraction.ts",
-    "extraction:cost": "bun --env-file=.env scripts/benchmark-cost.ts"
+    "extraction:cost": "bun --env-file=.env scripts/benchmark-cost.ts",
+    "workflow:verify": "bun --env-file=.env scripts/verify-workflow.ts"
   },
   "devDependencies": {
     "@alchemy.run/cloudflare": "2.0.0-beta.87",
@@ -32,6 +33,7 @@
     "@effect/platform-bun": "4.1.5",
     "@types/bun": "1.4.4",
     "alchemy": "2.0.0-beta.87",
+    "drizzle-orm": "1.0.0-rc.6",
     "effect": "4.1.5",
     "oxfmt": "^0.79.0",
     "oxlint": "^1.94.0",
