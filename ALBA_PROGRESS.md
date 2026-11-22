@@ -1,9 +1,11 @@
 # Alba — État du projet et suivi d’avancement
 
 > **Mise à jour :** 22 novembre 2026  
-> **Phase :** infrastructure B02 déployée sur le stage dev ; intégrations métier à réaliser  
-> **Statut général :** monorepo compilé et testé ; trois Workers et un Workflow déployés sur dev  
-> **Objectif immédiat :** implémenter les contrats B03, puis Neon et Zyte pour la première vérification durable.
+> **Phase :** infrastructure B02 déployée sur dev ; contrats B03 implémentés et testés localement
+>
+> **Statut général :** monorepo compilé et testé ; trois Workers et un Workflow déployés sur dev ; contrats métier versionnés disponibles
+>
+> **Objectif immédiat :** implémenter Neon B04 et Zyte B05 pour la première vérification durable.
 
 ## 1. Présentation du projet
 
@@ -110,7 +112,7 @@ Une instance de Workflow est une exécution durable, et non un nouveau Worker à
 | Logs | evlog avec identifiants de corrélation |
 | Configuration | Variables et bindings typés ; validation d’environnement à verrouiller |
 | Qualité | Ultracite, Oxlint, Oxfmt |
-| Tests | Vitest ; Playwright pour le parcours principal |
+| Tests | Bun test pour l’API et les contrats ; Vitest et Playwright envisagés pour les prochaines intégrations et le parcours principal |
 
 Le driver HTTP impose de concevoir les opérations atomiques avec des requêtes SQL ou des transactions non interactives adaptées. Valider les opérations de réservation et les besoins de Better Auth avec le driver retenu ; employer un transport WebSocket si des transactions interactives deviennent nécessaires. Hyperdrive n’est pas requis par le plan initial.
 
@@ -263,14 +265,14 @@ alba/
 
 **Mutualisation :** même offre et même contexte → une observation partageable entre suivis autorisés. Deux variantes, vendeurs ou pays différents ne doivent pas être fusionnés par une canonicalisation excessive. La fréquence effective satisfait le suivi actif le plus exigeant ; la règle exacte d’alignement des échéances reste à finaliser.
 
-### Premiers contrats cibles
+### Contrats B03 implémentés
 
 - `PriceCheckParamsV1` : version et `checkId` ; le contexte de la vérification est chargé puis figé.
 - `ExtractionRequestV1` : URL, contexte d’offre et mode autorisé.
 - `ExtractionResultV1` : union discriminée entre résultat exploitable et erreur métier.
 - Contrats API : création/modification d’un suivi, consultation du produit, historique et statut des vérifications.
 
-Ces noms décrivent des contrats à implémenter. Le résultat normalisé reste indépendant du schéma brut Zyte.
+Ces contrats sont exportés par `@alba/contracts` avec leurs types inférés et des fixtures valides/invalides. Le résultat normalisé reste indépendant du schéma brut Zyte. Les [conventions et limites B03](docs/contracts.md) précisent les champs, les états et les validations. Le squelette Workflow B02 conserve son ancien payload jusqu’à l’intégration B07 ; les routes métier et l’adaptateur Zyte ne consomment pas encore ces contrats.
 
 ## 7. Cycle d’une vérification et fiabilité
 
@@ -371,8 +373,9 @@ Corréler les logs avec `productId`, `checkId`, `workflowId` et la tentative fou
 | Alchemy | 2.0.0-beta.87 épinglé ; trois Workers et un Workflow déployés sur dev |
 | Migrations et intégrations métier | Non commencées |
 | Ressources cloud B02 | Déployées sur dev ; Web → API HTTP/oRPC et squelette Workflow exécutés |
+| Contrats B03 | Schémas Zod API, extraction, observations et payload Workflow versionné ; fixtures valides/invalides testées localement |
 
-Le dépôt ne contenait initialement que ce document. La structure ci-dessus reste une cible : les packages auth, tracking, extraction et contracts sont des points de départ vides. `bun install --frozen-lockfile`, `bun run typecheck`, `bun run build` et `bun run test` passent localement ; deux tests vérifient les routes de santé et RPC. Le démarrage local de Nuxt et de l’API et leurs réponses HTTP ont également été vérifiés. Le build Nuxt local utilise le preset Node, pas une validation Cloudflare.
+Le dépôt ne contenait initialement que ce document. La structure ci-dessus reste une cible : les packages auth, tracking et extraction sont des points de départ vides ; contracts contient les schémas B03 et leurs tests. Les deux tests API vérifient les routes de santé et RPC ; les tests de contrats couvrent aussi les montants décimaux, les URL, le contexte d’offre et les unions de résultats et statuts. Le démarrage local de Nuxt et de l’API et leurs réponses HTTP ont également été vérifiés en B01. Le build Nuxt local utilise le preset Node, pas une validation Cloudflare.
 
 ## 10. Nouveau plan d’exécution et suivi
 
@@ -382,7 +385,7 @@ Les identifiants **Bxx** remplacent le plan Axx de l’ancienne architecture Pyt
 | --- | --- | --- | --- |
 | B01 | Initialisation monorepo | Bun/Turbo, workspaces et TypeScript strict fonctionnels | Réalisé localement |
 | B02 | Versions et infrastructure | Version Alchemy épinglée ; premier déploiement reproductible | Réalisé sur dev : trois Workers, Workflow et bindings provisionnés ; santé via Nuxt et exécution du squelette vérifiées ; redéploiement réussi |
-| B03 | Contrats Zod | Contrats API et extraction, fixtures valides/invalides | Non commencé |
+| B03 | Contrats Zod | Contrats API et extraction, fixtures valides/invalides | Réalisé localement : schémas stricts versionnés, types inférés, fixtures et tests Bun ; intégrations runtime prévues en B05–B10 |
 | B04 | Neon + Drizzle | Schéma, migrations et transactions atomiques validés ; contraintes d’unicité permettant une finalisation idempotente | Non commencé |
 | B05 | Adaptateur Zyte | Extraction HTTP réelle normalisée ; erreurs classées | Non commencé |
 | B06 | Benchmark extraction | Échantillon représentatif, exactitude et coût mesurés | Non commencé |
@@ -449,7 +452,7 @@ La validation couvre également :
 - le recours navigateur seulement lorsqu’il est autorisé ;
 - les migrations, secrets et environnements isolés.
 
-**Prochaine action :** implémenter B03–B05, puis réaliser la première vérification durable : une instance Workflow appelle Zyte en HTTP et persiste une observation valide dans Neon, avec finalisation idempotente, erreurs classées et reprise après panne SQL vérifiées dès ce livrable.
+**Prochaine action :** implémenter B04–B05, puis réaliser la première vérification durable : une instance Workflow appelle Zyte en HTTP et persiste une observation valide dans Neon, avec finalisation idempotente, erreurs classées et reprise après panne SQL vérifiées dès ce livrable.
 
 ## 13. Références techniques
 
