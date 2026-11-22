@@ -1,6 +1,6 @@
 import { expect, test } from "bun:test";
 
-import app from "./index";
+import { app } from "./index";
 
 test("health endpoint", async () => {
   const response = await app.request("/health");

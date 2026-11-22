@@ -10,17 +10,17 @@ API (déclencheur opérateur protégé) → binding PRICE_CHECK → Workflow dur
 Workflow → Zyte HTTP → résultat durable → Neon (tentatives et finalisation atomique)
 ```
 
-Ce parcours B07 est vérifié avec les Workers locaux d’Alchemy et Zyte/Neon réels, y compris une panne SQL injectée. Le déploiement cloud `dev` reste celui du squelette B02 ; aucun déploiement distant B07 n’a été effectué. Les routes de suivi, le cron et l’authentification restent à implémenter. Voir les [preuves B07](workflows.md) et [l’infrastructure](infrastructure.md).
+Ce parcours B07 est vérifié avec les Workers locaux d’Alchemy et Zyte/Neon réels, y compris une panne SQL injectée. Le déploiement cloud `dev` reste celui du squelette B02 ; aucun déploiement distant B07 n’a été effectué. Les routes de suivi et l’authentification restent à implémenter. Le cron et le dispatcher B08 sont présents, avec activation explicite ; voir [B08](dispatcher.md). Voir les [preuves B07](workflows.md) et [l’infrastructure](infrastructure.md).
 
 ## Applications
 
 | Répertoire | Présent | Responsabilité visée |
 | --- | --- | --- |
 | `apps/web` | Nuxt 4, page provisoire et proxy serveur `/api/*`. | Interface, rendu serveur et transmission de `/api/*` vers l’API. |
-| `apps/api` | Hono, santé HTTP/oRPC, déclencheur opérateur protégé `/internal/checks/*` et serveur Bun local. | API, authentification, cron et dispatcher. |
+| `apps/api` | Hono, santé HTTP/oRPC, déclencheur opérateur protégé `/internal/checks/*` serveur Bun local et handler cron B08. | API, authentification, cron et dispatcher. |
 | `apps/workflows` | Workflow durable B07, extraction HTTP et finalisation Neon ; réponse HTTP 404. | Worker hébergeant le Workflow durable de vérification. |
 
-Les trois applications correspondent aux Workers déclarés par Alchemy. Le cron, le dispatcher et les routes métier utilisateur restent à implémenter.
+Les trois applications correspondent aux Workers déclarés par Alchemy. Le cron B08 vit dans le Worker API ; les routes métier utilisateur restent à implémenter.
 
 ## Packages
 
@@ -30,7 +30,7 @@ Les trois applications correspondent aux Workers déclarés par Alchemy. Le cron
 | `packages/db` | Client Neon HTTP, schéma Drizzle B04 et migrations versionnées appliquées par Alchemy. | Schémas, accès aux données et migrations. |
 | `packages/contracts` | Contrats Zod B03, types inférés et fixtures API/extraction/Workflow. | Schémas et types partagés sans code serveur. |
 | `packages/auth` | Point d’entrée réservé. | Authentification. |
-| `packages/tracking` | Préparation atomique, journal des tentatives, finalisation idempotente et lecture du prix courant. | Logique métier commune aux applications serveur. |
+| `packages/tracking` | Réservation atomique des échéances, acquittement protégé par bail, préparation, tentatives, finalisation et prix courant. | Logique métier commune aux applications serveur. |
 | `packages/extraction` | Client HTTP Zyte et mapping B03, tests simulés. | Adaptateur d’extraction et normalisation des résultats. |
 | `packages/config` | Configuration TypeScript stricte partagée. | Conventions techniques communes. |
 
@@ -53,12 +53,12 @@ flowchart LR
   F --> D
 ```
 
-Ce schéma inclut le cron et les routes utilisateur encore **cibles** ; le parcours opérateur B07 est vérifié localement. Le cron et le dispatcher doivent vivre dans le Worker API. Une vérification doit être persistée, puis traitée par une instance de Workflow ; les détails d’idempotence, de reprise et de budget sont définis dans le suivi du projet.
+Ce schéma inclut les routes utilisateur encore **cibles** ; le parcours opérateur B07 est vérifié localement. Le cron et le dispatcher doivent vivre dans le Worker API. Une vérification doit être persistée, puis traitée par une instance de Workflow ; les détails d’idempotence, de reprise et de budget sont définis dans le suivi du projet.
 
 ## Infrastructure et intégrations
 
 - **Alchemy** : `alchemy`, `@alchemy.run/cloudflare`, `@alchemy.run/frontend-frameworks` et `@alchemy.run/neon` sont épinglés ensemble en `2.0.0-beta.87`. [`alchemy.run.ts`](../alchemy.run.ts) assemble les modules `infra/`, utilise l’état distant Cloudflare et isole les noms par stage. Le build Nitro Cloudflare, le premier déploiement dev et le redéploiement sont vérifiés.
-- **Cloudflare** : bindings `API` (Web → API) et `PRICE_CHECK` (API → Workflow cross-worker) provisionnés. Pas de cron ; B04 déclare `DATABASE_URL` comme binding secret d’API et Workflows, vérifié en mode dev local, sans injection dans Web. Les routes de santé via Nuxt et le squelette Workflow sont exécutés sur Cloudflare ; les méthodes de création/consultation du binding API sont exercées en B07 avec Alchemy local.
+- **Cloudflare** : bindings `API` (Web → API) et `PRICE_CHECK` (API → Workflow cross-worker) provisionnés. Cron API chaque minute si `DISPATCH_ENABLED=true` ; B04 déclare `DATABASE_URL` comme binding secret d’API et Workflows, vérifié en mode dev local, sans injection dans Web. Les routes de santé via Nuxt et le squelette Workflow sont exécutés sur Cloudflare ; les méthodes de création/consultation du binding API sont exercées en B07 avec Alchemy local.
 - **Neon et Drizzle** : `createDb` construit un client HTTP à partir d’une URL fournie par le serveur. Le schéma et les migrations Alchemy sont appliqués à un projet personnel distant ; finalisation via `db.batch` et contraintes sont testées réellement avec le driver HTTP. Le prix courant est dérivé de l’historique. Les transactions interactives exigeraient de réévaluer le transport ; Better Auth reste à valider. Voir [B04](database.md).
 - **Zyte** : intégré au Workflow B07, avec activation explicite et hôtes autorisés. **Better Auth et interface métier** : non intégrés. Voir `.env.example` et [B07](workflows.md) pour les bindings serveur.
 

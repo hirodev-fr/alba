@@ -29,6 +29,8 @@
       "dependencies": {
         "@alba/api": "workspace:*",
         "@alba/contracts": "workspace:*",
+        "@alba/db": "workspace:*",
+        "@alba/tracking": "workspace:*",
         "@orpc/server": "1.16.4",
         "hono": "4.13.20",
       },

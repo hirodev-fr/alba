@@ -17,7 +17,7 @@ Drizzle ORM et Kit sont épinglés en **1.0.0-rc.6** : leur format de migrations
 
 ## Garanties SQL
 
-Le schéma couvre les comptes/sessions Better Auth, les produits, suivis, échéances, vérifications, tentatives et observations. L’authentification reste à intégrer en B11 ; la création/déduplication d’offres et la réservation des échéances appartiennent aux étapes métier suivantes.
+Le schéma couvre les comptes/sessions Better Auth, les produits, suivis, échéances, vérifications, tentatives et observations. L’authentification reste à intégrer en B11 ; la création/déduplication d’offres appartient à B10. La réservation atomique et l’acquittement des échéances sont implémentés en [B08](dispatcher.md), sans migration supplémentaire.
 
 Les contraintes imposent une vérification par `(product_id, scheduled_at)`, un `workflow_id` unique lorsqu’il est renseigné, une tentative par `(check_id, attempt_number)` et une observation par `check_id`. Les références composites empêchent de rattacher une observation au mauvais produit ou à la mauvaise vérification. Les périodes, fréquences et champs de statut sont contrôlés en SQL.
 

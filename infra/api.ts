@@ -9,14 +9,17 @@ export const createApi = (
   host: Cloudflare.Worker,
   workflowName: string,
   databaseUrl: Output.Output<Redacted.Redacted<string>>,
-  verificationToken: Redacted.Redacted<string>
+  verificationToken: Redacted.Redacted<string>,
+  dispatchEnabled: boolean
 ) =>
   Cloudflare.Worker("Api", {
     main: "apps/api/src/index.ts",
     compatibility,
     workersDev: false,
+    crons: dispatchEnabled ? ["* * * * *"] : [],
     env: {
       DATABASE_URL: databaseUrl,
+      DISPATCH_ENABLED: String(dispatchEnabled),
       WORKFLOW_VERIFY_TOKEN: verificationToken,
       PRICE_CHECK: Cloudflare.Workflow<PriceCheckParamsV1>("PriceCheck", {
         className: "PriceCheckWorkflow",
