@@ -69,8 +69,34 @@ Ne pas considérer ces noms ou exemples comme une configuration de production co
 
 ## Intégration continue GitHub
 
-Le workflow `CI` se déclenche sur les push, pull requests, merge queues et manuellement. Le job `Verify` installe la version de Node indiquée dans `.node-version` et la version de Bun définie par `packageManager`, puis exécute l’installation figée, `check`, `typecheck`, `test` et `build`. Les actions sont épinglées par SHA ; aucun secret ni déploiement n’est nécessaire. Une nouvelle exécution annule la précédente pour une même pull request.
+Le workflow `CI` se déclenche sur les pull requests, les push vers `dev` et `main`, les merge queues et manuellement. Les branches de travail ne déclenchent pas de CI au simple push ; une fois la pull request ouverte, chaque mise à jour de celle-ci déclenche `Verify` une seule fois. Le job `Verify` installe la version de Node indiquée dans `.node-version` et la version de Bun définie par `packageManager`, puis exécute l’installation figée, `check`, `typecheck`, `test` et `build`. Les actions sont épinglées par SHA ; aucun secret ni déploiement n’est nécessaire. Une nouvelle exécution annule la précédente pour une même pull request.
 
-Le workflow `CodeQL` analyse JavaScript et TypeScript sur les pull requests, les push vers `dev` et `main`, chaque semaine et manuellement. La configuration Dependabot propose chaque semaine des mises à jour pour Bun et les actions GitHub ; son activation et les premiers résultats dépendent de GitHub et de la branche par défaut. CodeQL nécessite l’activation et la disponibilité de la sécurité GitHub pour le dépôt.
+Le workflow `CodeQL` analyse JavaScript et TypeScript sur les pull requests, les push vers `dev` et `main`, chaque semaine et manuellement. La configuration Dependabot propose chaque semaine des mises à jour pour Bun et les actions GitHub ; son activation et les premiers résultats dépendent de GitHub et de la branche par défaut. CodeQL nécessite l’activation et la disponibilité de la sécurité GitHub pour le dépôt. Dans une pull request, le job d’analyse et le contrôle des résultats de code scanning sont deux contrôles distincts : le second présente les alertes issues de l’analyse.
 
 Après publication des workflows, vérifier leurs premières exécutions dans l’onglet Actions et, si souhaité, configurer une règle de protection pour exiger le job `Verify` avant fusion. Ces fichiers ne configurent ni protections de branche ni déploiement. Le build Nuxt et les bundles Workers restent des validations locales, pas un test Cloudflare.
+
+## Branches et pull requests
+
+Le flux prévu protège `dev` et `main` contre les modifications directes. Créer une branche de travail depuis la branche cible, y committer les changements avec un message Conventional Commit, puis pousser cette branche et ouvrir une pull request vers la cible. La branche distante `main` n’existe pas encore dans l’état observé ; la créer avant de l’utiliser comme cible. Ne pas pousser directement vers les branches protégées.
+
+Exemple pour une modification destinée à `dev` :
+
+```sh
+git switch dev
+git pull --ff-only
+git switch -c feat/ma-modification
+# Modifier les fichiers, puis exécuter les vérifications adaptées.
+git add <fichiers>
+cog commit feat "describe the change"
+git push -u origin feat/ma-modification
+```
+
+Ouvrir ensuite une pull request vers `dev`. Les changements destinés à `main` passent également par une pull request ; une promotion depuis `dev` pourra utiliser `dev` comme branche source. Les paramètres de fusion et le nombre d’approbations relèvent des règles du dépôt.
+
+### Réglages GitHub à appliquer
+
+La présence des workflows ne protège pas les branches : dans **Settings → Rules → Rulesets**, créer une règle de branche ciblant explicitement `dev` et `main`, puis activer **Require a pull request before merging** et **Require status checks to pass before merging**. Ajouter le contrôle `Verify` de la GitHub App Actions après sa première exécution réussie ; garder les déclencheurs `pull_request` et `merge_group` si une merge queue est activée. Configurer les approbations et les éventuels droits de contournement selon les personnes qui maintiennent le dépôt. Éviter d’autoriser les force pushes ou suppressions sur ces branches.
+
+Ne pas confondre l’obligation de passer par une pull request avec une règle qui restreint toutes les mises à jour de branche : cette dernière peut également empêcher les fusions si ses exceptions ne sont pas adaptées. Vérifier les règles effectives et les droits de contournement, y compris pour les administrateurs, avec une pull request de test. Ces réglages sont à appliquer sur GitHub ; ce fichier ne les active pas.
+
+Dependabot ouvre par défaut ses pull requests vers la branche par défaut, actuellement `dev`. Aucun workflow de release ne pousse automatiquement vers les branches protégées ; avant d’en ajouter un, prévoir son mode de publication et ses droits sans contourner involontairement ces protections.

@@ -7,6 +7,11 @@
 - Garder les secrets et les implémentations serveur hors du navigateur. Ne jamais versionner de credentials ou de fichiers d’environnement locaux.
 - Utiliser les API d’Alchemy **2.0.0-beta.87**, sans les mélanger avec celles de la v1. La stack est partielle et non validée en cloud : ne pas annoncer un déploiement ou un binding fonctionnel sans vérification.
 
+## Collaboration Git
+
+- Travailler sur une branche dédiée et proposer les changements par pull request vers `dev` ou `main` ; ne pas pousser directement sur ces branches.
+- Conserver des commits Conventional Commits compatibles avec Cocogitto. Ne pas considérer une protection de branche ou un contrôle GitHub comme actif sans vérification.
+
 ## Commandes
 
 Exécuter depuis la racine avec Bun 1.4.4 et Node.js 24.22.3 (version indiquée dans `.node-version` et utilisée par la CI) :
